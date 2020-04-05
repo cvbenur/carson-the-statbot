@@ -1,10 +1,9 @@
 const Discord = require('discord.js');
 const Commands = require('./commands.js');
+const token = require('./token.js')
 
 
 const bot = new Discord.Client();
-
-const token = 'Njk2MzM0MjAzNDkwNjY0NDYw.XonTBw.2naCmujCQGpnU96BmohgCrZDc-w';
 
 
 bot.on('ready', () => {
