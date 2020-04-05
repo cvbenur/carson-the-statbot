@@ -4,6 +4,7 @@ const token = require('./token.js')
 
 
 const bot = new Discord.Client();
+bot.login(TOKEN);
 
 
 bot.on('ready', () => {
@@ -37,6 +38,3 @@ bot.on('message', message => {
         }
     }
 })
-
-
-bot.login(token);
