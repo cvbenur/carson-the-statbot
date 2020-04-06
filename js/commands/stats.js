@@ -1,4 +1,3 @@
-const Discord = require('discord.js');
 const Util = require('../utilities.js');
 
 module.exports = {
@@ -9,6 +8,13 @@ module.exports = {
 
 
         switch (args.length) {
+
+            // If there are no arguments after 'stats
+            case 2:
+                msg.channel.send(
+                    Util.WIP()
+                );
+                break;
 
             // If there is only 1 argument after 'stats'
             case 3:
