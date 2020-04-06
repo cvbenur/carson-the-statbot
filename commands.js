@@ -1,16 +1,44 @@
 const Discord = require('discord.js');
 
+
+const helpEmbed = new Discord.MessageEmbed()
+    .setTitle('Carson the StatBot')
+    .setColor(0xffffff)
+    .setDescription('Carson is an easy to use - although VERY sassy - statistics compiling bot for your Discord server.\n\nHe can pretty much tell you anything you might want to know, with pretty, easy-to-read little graphs.')
+    .addFields(
+        // TODO: Link 'help' to a web page
+        { name: '**Commands**',                         value:'Here is a list of commands you can give Carson.\n\n\n' },
+        { name: 'Help',                                 value: 'If you need any help with one of Carson\'s commands, simply type `-c help`.\n\n' },
+        { name: 'Stats',                                value: 'There are many things you can do with Carson in terms of stats.\nIn order to get a list of stats commands for Carson, simply type `-c stats help`.' }
+);
+
+
+const startEmbed = new Discord.MessageEmbed()
+        .setTitle('Carson says')
+        .setColor(0xffffff)
+        .setDescription('Just type `-c help` to get started.');
+
 function answerify(text) {
-    return new Discord.MessageEmbed().setTitle('StatBot says').setDescription(text).setColor(0xffffff);
+    return new Discord.MessageEmbed()
+        .setTitle('Carson says')
+        .setColor(0xffffff)
+        .setDescription(text);
 }
 
 
 module.exports = {
-    const: PREFIX = '-',
+    const: PREFIX = '-c',
+
+
+    // Reacting to only prefix
+    start: function (msg) {
+        msg.channel.send(startEmbed);
+    },
 
 
     // Reacting to 'ping' command
     pong: function (msg) {
+        // FIXME
         switch(Math.floor(Math.random() * 6) + 1) {
             case 0:
                 msg.channel.send(answerify('Pong!'));
@@ -40,20 +68,22 @@ module.exports = {
 
     // Reacting to 'help' command
     help: function (msg) {
-        msg.channel.send(answerify(':warning: Work in progress... Come back later !'));
+        msg.channel.send(helpEmbed);
     },
 
 
     // Reacting to 'stats' command
     stats: function (msg) {
 
+        // TODO: -c stats command
+
         // Decomposing the message into arguments
-        let args = msg.content.substring(PREFIX.length).split(" ");
+        let args = msg.content.split(" ");
 
 
-        switch (args[1]) {
+        switch (args[2]) {
             case 'help':
-                msg.channel.send(answerify(':warning: Work in progress... Come back later !'));
+                msg.channel.send(answerify(':warning: Work in progress... Come back a bit later !'));
                 break;
         }
     }

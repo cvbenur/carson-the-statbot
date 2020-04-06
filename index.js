@@ -14,27 +14,34 @@ bot.on('ready', () => {
 
 // Detecting messages
 bot.on('message', message => {
+    
+    // Decomposing the message into arguments
+    let args = message.content.split(" ");
 
     // Detecting commands destined to this bot in messages
-    if (message.content.charAt(0) === PREFIX) {
+    if (args[0] === PREFIX) {
 
-        // Decomposing the message into arguments
-        let args = message.content.substring(PREFIX.length).split(" ");
+        if (args.length === 1) {
 
-        // Detecting arguments
-        switch(args[0]) {
-            case 'ping':
-                Commands.pong(message);
-                break;
+            // Detected prefix only
+            Commands.start(message);
 
-            case 'help':
-                // TODO: Implement 'help' command
-                
-                break;
+        } else {
+            
+            // Detecting arguments
+            switch(args[1]) {
+                case 'ping':
+                    Commands.pong(message);
+                    break;
 
-            case 'stats':
-                Commands.stats(message);
-                break;
+                case 'help':
+                    Commands.help(message);
+                    break;
+
+                case 'stats':
+                    Commands.stats(message);
+                    break;
+            }
         }
     }
 })
