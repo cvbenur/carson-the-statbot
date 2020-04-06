@@ -39,6 +39,18 @@ Computing stats and sending back links to the generated stats.
 - **`stats <global | channel> <player?> <word`**(a string between 2 '_')**`> <time?>`** : Nbr of occurncs of `word` over `time`, Nbr of occurncs of `word`/channel (%) over `time`, Nbr of occurncs of `word`/pers & /channel (%) over `time`
 (No value for `time` -> since creation of server (for `global`) or channel (for `channel`))
 
+### **Keywords for the `stats` command**
+Forms recognized by the bot.
+
+- **`<channel>`** arguments must be preceeded by a **`:`** symbol.
+> **E.g.** **`:chan`** will refer to channel 'chan'.
+
+- **`<player>`** arguments must be preceeded by a **`'`** symbol.
+> **E.g.** **`"dude`** will refer to player 'dude'.
+
+- **`<time>`** arguments must be preceeded by a **`&`** symbol.
+> **E.g.** **`&3`** will refer to '3 weeks'.
+
 #### **Answers to `stats` command would be in the form :**
 >
 > #### **Carson says**
