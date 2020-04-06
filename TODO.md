@@ -9,7 +9,7 @@ Sending back a link to the command manual
 
 #### **Answer to `stats` command would be in the form :**
 >
-> #### **StatBot says**
+> #### **Carson says**
 >
 > Don't panic ! The counsel you seek is right here :
 >
@@ -30,7 +30,7 @@ Computing stats and sending back links to the generated stats.
 - **`stats <channel> <player> <time?>`** :  Time span, Nbr of msg, % of msg
 (No value for `time` -> since creation of channel)
 
-- **`stats <player> <time?>`** : DoB, Nbr of invt, Nbr of kick, Nbr of ban, Nbr of msg (%)
+- **`stats global <player> <time?>`** : DoB, Nbr of invt, Nbr of kick, Nbr of ban, Nbr of msg (%)
 (No value for `time` -> since DoB)
 
 - **`stats global <time?>`** : DoB, Nbr of chann, Nbr of player, Nbr of msg, Nbr of msg/pers (%)
@@ -41,7 +41,7 @@ Computing stats and sending back links to the generated stats.
 
 #### **Answers to `stats` command would be in the form :**
 >
-> #### **StatBot says**
+> #### **Carson says**
 >
 > Stats compiled ! They're patiently waiting for you right over there :
 >
@@ -51,29 +51,29 @@ Computing stats and sending back links to the generated stats.
 
 <br>
 
-### **The `setname` command**
+### **The `prefix` command**
 Setting the bot's name on the server
 
-- **`setname <name?>`** : Sets the bot's name to `name` on the server
-(No value for `name` resets the name to default value ('**Carson**'))
+- **`prefix <prefix>`** : Sets the bot's prefix to `prefix` on the server
+(Value `default` for `prefix` resets the prefix to default value ('**`-c`**'))
 
-#### **Answers to `setname` command would be in the form :**
+#### **Answers to `prefix` command would be in the form :**
 
-For a new value of `name` :
-> #### **StatBot says**
+When giving a value for `prefix` :
 >
-> What do you mean, you changed my name ?
-> Wait... You mean I'm `name` now ?
-> Aaaalright ! I dig it !
-
-When reseting `name` to default value :
-> #### **StatBot says**
+> #### **Carson says**
 >
-> Wait... I think I'm remembering something...
-> Yes ! My name ! It was always **Carson** !
+> Gotcha ! I will now only answer when you tell me `prefix`.<br>
+> Forget eeeeverything else...<br>
+> **\*Stares into the distance\***
 
-When seting `name` to `Carson` :
-> #### **StatBot says**
+
+When giving resetting the default value of `prefix` :
 >
-> Is '**Carson**' my new name ?
-> Sounds strangely familiar... I like it, though.
+> #### **Carson says**
+>
+> I haven't heard that prefix in a while...<br>
+> **\*Looks at you suspiciously\***<br>
+> Where do you know it from ?
+> 
+> Alright. I guess I'll accept this phrase.

@@ -14,34 +14,39 @@ bot.on('ready', () => {
 
 // Detecting messages
 bot.on('message', message => {
+
+    // Detecting commands destined to this bot in messages
+    if (!message.content.startsWith(PREFIX) || message.author.bot) return;
     
+    console.log('Message from : ' + message.member.displayName + ' -> ' + message.content);
+
     // Decomposing the message into arguments
     let args = message.content.split(" ");
 
-    // Detecting commands destined to this bot in messages
-    if (args[0] === PREFIX) {
+    // Running the commands
+    if (args.length === 1) {
 
-        if (args.length === 1) {
+        // Detected prefix only
+        Commands.start(message);
 
-            // Detected prefix only
-            Commands.start(message);
+    } else {
+        
+        // Detecting arguments
+        switch(args[1]) {
+            case 'ping':
+                Commands.pong(message);
+                break;
 
-        } else {
-            
-            // Detecting arguments
-            switch(args[1]) {
-                case 'ping':
-                    Commands.pong(message);
-                    break;
+            case 'help':
+                Commands.help(message);
+                break;
 
-                case 'help':
-                    Commands.help(message);
-                    break;
+            case 'stats':
+                Commands.stats(message, args);
+                break;
 
-                case 'stats':
-                    Commands.stats(message);
-                    break;
-            }
+            case 'prefix':
+                Commands.prefix(message, args);
         }
     }
 })
