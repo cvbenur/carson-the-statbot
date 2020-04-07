@@ -7,10 +7,17 @@ const Util = require('./js/utilities.js');
 
 // Initializing bot
 const bot = new Discord.Client();
-
 bot.login(config.TOKEN);
+
+
+// Initializing global variables
 PREFIX = config.DEFAULT_PREFIX;
+console.log('Default prefix loaded.');
+
 PLAYER_PERMS = config.DEFAULT_PLAYER_PERMS;
+console.log('Default permissions loaded.');
+
+
 
 
 
@@ -89,7 +96,7 @@ bot.on('message', message => {
 
             // Detected 'prefix'
             case 'prefix':
-                
+
                 if (Util.permCheck(message.member.guild.me, PLAYER_PERMS.prefix)) {
                     console.log(">>Executing 'prefix' command.");
                     Commands.prefix.execute(message, args);
