@@ -1,30 +1,46 @@
 const Discord = require('discord.js');
 
 
+
+// Replaces all '\n' in a line by '\n\t'
+function addTabOnLine(str) {
+    return str.replace(/\n/g, "\n\t");
+}
+
+// Returning a String containing the embed's fields
+function getEmbedsAsString(emb) {
+    var embFields = '\nFields :';
+
+    emb.fields.forEach(field => {
+        embFields += '\n\t' + field.name + '\n\t' + addTabOnLine(field.value);
+    });
+
+    return embFields.slice(0, embFields.length-1);
+}
+
 // Printing the embed in a message
-function printEmbedFromMessage(msg, msgAuthor) {
+function printEmbedFromMessage(embeds, msgAuthor) {
     
     // For each embed in the message
-    msg.embeds.forEach(emb => {
+    embeds.forEach(emb => {
+
+        // Loading the embed into a local String
+        let msgContent = '\nDescription :\n\t' + addTabOnLine(emb.description);
+
 
         // If there are any fields in the embed
         if (emb.fields.length > 0) {
 
-            // Displaying the detected embed
-            console.log(
-                'MSG FROM : ' + msgAuthor + ' -> '
-                + emb.description + '\n'
-                + emb.fields
-            );
+            // Getting the fields as a string
+            msgContent += getEmbedsAsString(emb);
 
-        } else {
-            
-            // Displaying the detected embed
-            console.log(
-                'MSG FROM : ' + msgAuthor + ' -> '
-                + emb.description
-            );
         }
+
+        // Displaying the detected embed
+        console.log(
+            'MSG FROM : ' + msgAuthor + ' -> MessageEmbed :'
+            + msgContent
+        );
     });
 }
 
@@ -55,7 +71,7 @@ module.exports = {
         if (msg.embeds.length > 0) {
 
             // Printing the embed in the message
-            printEmbedFromMessage(msg, msgAuthor);
+            printEmbedFromMessage(msg.embeds, msgAuthor);
 
         } else {
 
