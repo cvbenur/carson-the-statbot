@@ -32,11 +32,10 @@ module.exports = {
 
                 // Reseting the prefix
                 setPrefix(msg.guild, '-c');
-                let prefixes = JSON.parse(fs.readFileSync("./prefixes.json", "utf8"));
-                console.log('>>Prefix set to default prefix : \'' + prefixes[msg.guild.id].prefix + '\'.');
+                console.log('>>Prefix set to default prefix : \'' + PREFIX + '\'.');
 
                 msg.channel.send(
-                    Util.answerify('\'`' + prefixes[msg.guild.id].prefix + '`\', you say ?\n... I haven\'t heard that prefix in a while...\n**\*Suddenly looks at you suspiciously\***\nWhere did you get that from ?\n\nAlright. I guess I\'ll accept this.')
+                    Util.answerify('\'`' + PREFIX + '`\', you say ?\n... I haven\'t heard that prefix in a while...\n**\*Suddenly looks at you suspiciously\***\nWhere did you get that from ?\n\nAlright. I guess I\'ll accept this.')
                 );
                 break;
 
@@ -55,11 +54,10 @@ module.exports = {
 
                     // Setting the prefix to the new phrase
                     setPrefix(msg.guild, args[2]);
-                    let prefixes = JSON.parse(fs.readFileSync("./prefixes.json", "utf8"));
-                    console.log('>>Prefix set to : \'' + prefixes[msg.guild.id].prefix + '\'.');
+                    console.log('>>Prefix set to : \'' + PREFIX + '\'.');
 
                     msg.channel.send(
-                        Util.answerify('Gotcha ! I will now only answer to `' + prefixes[msg.guild.id].prefix +'`.\nForget eeeeverything else...\n**\*Stares into the distance\***')
+                        Util.answerify('Gotcha ! I will now only answer to `' + PREFIX +'`.\nForget eeeeverything else...\n**\*Stares into the distance\***')
                     );
                 }
                 break;
