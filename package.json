@@ -1,7 +1,7 @@
 {
   "name": "test-statbot",
   "version": "1.0.0",
-  "description": "",
+  "description": "Write README.md / doc.",
   "main": "index.js",
   "scripts": {
     "start": "node .",
@@ -12,5 +12,13 @@
   "license": "ISC",
   "dependencies": {
     "discord.js": "^12.1.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cvbenur/statbot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cvbenur/statbot/issues"
+  },
+  "homepage": "https://github.com/cvbenur/statbot#readme"
 }
