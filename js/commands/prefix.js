@@ -30,7 +30,7 @@ module.exports = {
                 if (args[2] === PREFIX) {
 
                     msg.channel.send(
-                        Util.answerify('Uhm... That\'s already my prefix.\nDid you not realize that as you were typing this very command ?')
+                        Util.answerify('Uhm... That\'s already my prefix.\nDid you not realize this as you were typing this very command ?')
                     );
 
                 } else {
