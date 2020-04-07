@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const Commands = require('./js/commands.js');
 const config = require('./config.json');
+const Util = require('./js/utilities.js');
 
 
 
@@ -21,8 +22,8 @@ bot.on('ready', () => {
 // Detecting messages
 bot.on('message', message => {
 
-    // Displaying detected message
-    console.log('Message from : ' + message.member.displayName + ' -> ' + message.content);
+    // Logging the message in the console
+    Util.logMessage(message);
 
 
     // Detecting commands destined to this bot in messages
