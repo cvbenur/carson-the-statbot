@@ -6,7 +6,7 @@ module.exports = {
     execute (msg) {
         msg.channel.send(new Discord.MessageEmbed()
             .setTitle('Carson says')
-            .setColor(0xffffff)
+            .setColor("#FFFFFF")
             .setDescription('Just type `' + PREFIX + ' help` to get started.')
         );
     }

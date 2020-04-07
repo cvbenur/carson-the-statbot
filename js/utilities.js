@@ -53,7 +53,7 @@ module.exports = {
     answerify (text) {
         return new Discord.MessageEmbed()
             .setTitle('Carson says')
-            .setColor(0xffffff)
+            .setColor("#FFFFFF")
             .setDescription(text);
     },
 

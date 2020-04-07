@@ -7,7 +7,7 @@ module.exports = {
         msg.channel.send(
             new Discord.MessageEmbed()
             .setTitle('Carson the StatBot')
-            .setColor(0xffffff)
+            .setColor("#FFFFFF")
             .setDescription('Carson is an easy to use - although VERY sassy - statistics compiling bot for your Discord server.\n\nHe can pretty much tell you anything you might want to know, with pretty, easy-to-read little graphs.')
             .addFields(
                 // TODO: Link 'help' to a web page
