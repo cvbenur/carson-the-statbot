@@ -1,4 +1,5 @@
-const config = require('./config.json');
+const config = require('../../config.json');
+const Util = require('../utilities.js')
 const fs = require('fs');
 
 
@@ -23,9 +24,10 @@ function resetPrefix (id) {
 module.exports = {
     name: "reset",
     description: "Resets Carson's configuration to default.",
-    execute(guildId) {
+    execute(msg) {
 
-        resetPrefix(id);
+        resetPrefix(msg.member.guild.id);
         
+        msg.channel.send(Util.answerify("Reset Carson's settings to default."));
     }
 };
