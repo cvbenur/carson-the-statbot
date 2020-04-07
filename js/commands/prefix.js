@@ -1,12 +1,29 @@
 const Util = require('../utilities.js');
+const fs = require('fs');
+
+
+// Changing the prefix for this server
+function setPrefix(guild, newPref) {
+
+    let prefixes = JSON.parse(fs.readFileSync("./prefixes.json", "utf8"));
+
+    prefixes[guild.id] = {
+        prefix: newPref
+    };
+
+    fs.writeFileSync("./prefixes.json", JSON.stringify(prefixes), (err) => {
+        if (err) console.log(err);
+    });
+
+    PREFIX = newPref;
+}
+
 
 module.exports = {
     name: "prefix",
     description: "Command to set or reset the bot's prefix.",
     execute(msg, args) {
-        // TODO: check permissions for message sender
-
-
+        
         // Checking the number of arguments
         switch (args.length) {
 
@@ -14,11 +31,12 @@ module.exports = {
             case 2:
 
                 // Reseting the prefix
-                PREFIX = '-c';
-                console.log('>>Prefix set to default prefix : \'' + PREFIX + '\'.');
+                setPrefix(msg.guild, '-c');
+                let prefixes = JSON.parse(fs.readFileSync("./prefixes.json", "utf8"));
+                console.log('>>Prefix set to default prefix : \'' + prefixes[msg.guild.id].prefix + '\'.');
 
                 msg.channel.send(
-                    Util.answerify('\'`' + PREFIX + '`\', you say ?\n... I haven\'t heard that prefix in a while...\n**\*Suddenly looks at you suspiciously\***\nWhere did you get that from ?\n\nAlright. I guess I\'ll accept this.')
+                    Util.answerify('\'`' + prefixes[msg.guild.id].prefix + '`\', you say ?\n... I haven\'t heard that prefix in a while...\n**\*Suddenly looks at you suspiciously\***\nWhere did you get that from ?\n\nAlright. I guess I\'ll accept this.')
                 );
                 break;
 
@@ -36,11 +54,12 @@ module.exports = {
                 } else {
 
                     // Setting the prefix to the new phrase
-                    PREFIX = args[2];
-                    console.log('>>Prefix set to : \'' + PREFIX + '\'.');
+                    setPrefix(msg.guild, args[2]);
+                    let prefixes = JSON.parse(fs.readFileSync("./prefixes.json", "utf8"));
+                    console.log('>>Prefix set to : \'' + prefixes[msg.guild.id].prefix + '\'.');
 
                     msg.channel.send(
-                        Util.answerify('Gotcha ! I will now only answer to `' + PREFIX +'`.\nForget eeeeverything else...\n**\*Stares into the distance\***')
+                        Util.answerify('Gotcha ! I will now only answer to `' + prefixes[msg.guild.id].prefix +'`.\nForget eeeeverything else...\n**\*Stares into the distance\***')
                     );
                 }
                 break;
