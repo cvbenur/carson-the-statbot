@@ -11,16 +11,6 @@ const bot = new Discord.Client();
 bot.login(config.TOKEN);
 
 
-// Initializing global variables
-PREFIX = config.DEFAULT_PREFIX;
-console.log('Default prefix loaded.');
-
-PLAYER_PERMS = config.DEFAULT_PLAYER_PERMS;
-console.log('Default permissions loaded.');
-
-
-
-
 bot.on('ready', () => {
     console.log('Bot online.');
 })
@@ -42,6 +32,8 @@ bot.on('message', message => {
 
     PREFIX = prefixes[message.guild.id].prefix;
 
+
+    
     // Logging the message in the console
     Util.logMessage(message);
 
