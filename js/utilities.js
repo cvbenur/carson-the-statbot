@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 
 
 
+
 // Replaces all '\n' in a line by '\n\t'
 function addTabOnLine(str) {
     return str.replace(/\n/g, "\n\t");
@@ -43,6 +44,8 @@ function printEmbedFromMessage(embeds, msgAuthor) {
         );
     });
 }
+
+
 
 
 
@@ -90,6 +93,7 @@ module.exports = {
             if (me.hasPermission(perm)) {
 
                 allowed ++;
+
             }
         });
 
@@ -101,5 +105,24 @@ module.exports = {
 
         // Else
         return false;
+    },
+    permDenied(perms) {
+
+        // Logging the event into the console
+        console.log('Permission denied.');
+
+
+        let message = 'Sorry, you don\'t have the right permissions for this command.\nThe required permissions are :';
+
+        // For each of the required permissions
+        perms.forEach(perm => {
+
+            // Adding this permission to the message
+            message += '\n\t - ' + perm;
+        });
+
+        message += '\n\nContact one of your server\'s Admins in order to sort this out.';
+
+        return this.answerify(message);
     }
 };
