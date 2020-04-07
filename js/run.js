@@ -44,6 +44,18 @@ module.exports = {
                 break;
 
 
+            // Pipeline for command 'reset'
+            case 'reset':
+
+                if (Util.permCheck(message.member.guild.me, PLAYER_PERMS.reset)) {
+                    console.log(">>Executing 'reset' command.");
+                    Commands.reset.execute(message, args);
+                } else {
+                    message.channel.send(Util.permDenied(PLAYER_PERMS.reset));
+                }
+                break;
+
+
             // Pipeline for command '-c'
             case 'start':
 
