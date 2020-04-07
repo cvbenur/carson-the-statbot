@@ -1,12 +1,29 @@
 const Util = require('../utilities.js');
+const fs = require('fs');
+
+
+// Changing the prefix for this server
+function setPrefix(guild, newPref) {
+
+    let prefixes = JSON.parse(fs.readFileSync("./prefixes.json", "utf8"));
+
+    prefixes[guild.id] = {
+        prefix: newPref
+    };
+
+    fs.writeFileSync("./prefixes.json", JSON.stringify(prefixes), (err) => {
+        if (err) console.log(err);
+    });
+
+    PREFIX = newPref;
+}
+
 
 module.exports = {
     name: "prefix",
     description: "Command to set or reset the bot's prefix.",
     execute(msg, args) {
-        // TODO: check permissions for message sender
-
-
+        
         // Checking the number of arguments
         switch (args.length) {
 
@@ -14,7 +31,7 @@ module.exports = {
             case 2:
 
                 // Reseting the prefix
-                PREFIX = '-c';
+                setPrefix(msg.guild, '-c');
                 console.log('>>Prefix set to default prefix : \'' + PREFIX + '\'.');
 
                 msg.channel.send(
@@ -36,7 +53,7 @@ module.exports = {
                 } else {
 
                     // Setting the prefix to the new phrase
-                    PREFIX = args[2];
+                    setPrefix(msg.guild, args[2]);
                     console.log('>>Prefix set to : \'' + PREFIX + '\'.');
 
                     msg.channel.send(

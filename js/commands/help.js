@@ -12,8 +12,8 @@ module.exports = {
             .addFields(
                 // TODO: Link 'help' to a web page
                 { name: '**Commands**',                         value:'Here is a list of commands you can give Carson.\n\n\n' },
-                { name: 'Help',                                 value: 'If you need any help with one of Carson\'s commands, simply type `-c help`.\n\n' },
-                { name: 'Stats',                                value: 'There are many things you can do with Carson in terms of stats.\nIn order to get a list of stats commands for Carson, simply type `-c stats help`.' }
+                { name: 'Help',                                 value: 'If you need any help with one of Carson\'s commands, simply type `' + PREFIX + ' help`.\n\n' },
+                { name: 'Stats',                                value: 'There are many things you can do with Carson in terms of stats.\nIn order to get a list of stats commands for Carson, simply type `' + PREFIX + ' stats help`.' }
             )
         );
     }

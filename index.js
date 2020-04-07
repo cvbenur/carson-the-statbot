@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const fs = require('fs');
 const Run = require('./js/run.js');
 const config = require('./config.json');
 const Util = require('./js/utilities.js');
@@ -20,7 +21,6 @@ console.log('Default permissions loaded.');
 
 
 
-
 bot.on('ready', () => {
     console.log('Bot online.');
 })
@@ -31,6 +31,16 @@ bot.on('ready', () => {
 
 // Detecting messages
 bot.on('message', message => {
+
+    let prefixes = JSON.parse(fs.readFileSync("./prefixes.json", "utf8"));
+
+    if (!prefixes[message.guild.id]) {
+        prefixes[message.guild.id] = {
+            prefix: config.DEFAULT_PREFIX
+        };
+    }
+
+    PREFIX = prefixes[message.guild.id].prefix;
 
     // Logging the message in the console
     Util.logMessage(message);
