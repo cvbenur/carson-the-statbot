@@ -56,9 +56,13 @@ module.exports = {
             .setColor(0xffffff)
             .setDescription(text);
     },
+
+    
     WIP () {
         return this.answerify(':warning: Work in progress... Come back a bit later !');
     },
+
+
     logMessage(msg) {
 
         let msgAuthor = msg.member.displayName;
@@ -82,6 +86,8 @@ module.exports = {
             console.log('MSG FROM : ' + msgAuthor + ' -> ' + msg.content);
         }
     },
+
+
     permCheck(me, perms) {
 
         let allowed = 0;
@@ -106,6 +112,8 @@ module.exports = {
         // Else
         return false;
     },
+
+
     permDenied(perms) {
 
         // Logging the event into the console
