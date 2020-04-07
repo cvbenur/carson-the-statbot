@@ -10,6 +10,9 @@ const bot = new Discord.Client();
 
 bot.login(config.TOKEN);
 PREFIX = config.DEFAULT_PREFIX;
+PLAYER_PERMS = config.DEFAULT_PLAYER_PERMS;
+
+
 
 bot.on('ready', () => {
     console.log('Bot online.');
@@ -36,10 +39,14 @@ bot.on('message', message => {
 
 
     // Running the commands
-    if (args.length === 1) {
+    if (args.length === 1) {    // Detected prefix only
 
-        // Detected prefix only
-        Commands.start.execute(message);
+        if (Util.permCheck(message.member.guild.me, PLAYER_PERMS.talk)) {
+            console.log(">>Executing 'start' command.");
+            Commands.start.execute(message);
+        } else {
+            Util.permDenied(PLAYER_PERMS.talk);
+        }
 
     } else {
 
@@ -48,28 +55,47 @@ bot.on('message', message => {
 
             // Detected 'ping'
             case 'ping':
-                console.log(">>Executing 'ping' command.");
-                Commands.pong.execute(message);
+
+                if (Util.permCheck(message.member.guild.me, PLAYER_PERMS.pong)) {
+                    console.log(">>Executing 'ping' command.");
+                    Commands.pong.execute(message);
+                } else {
+                    Util.permDenied(PLAYER_PERMS.pong);
+                }
+                
                 break;
 
             // Detected 'help'
             case 'help':
-                console.log(">>Executing 'help' command.");
-                Commands.help.execute(message);
+
+                if (Util.permCheck(message.member.guild.me, PLAYER_PERMS.help)) {
+                    console.log(">>Executing 'help' command.");
+                    Commands.help.execute(message);
+                } else {
+                    Util.permDenied(PLAYER_PERMS.help);
+                }
                 break;
 
             // Detected 'stats'
             case 'stats':
-                console.log(">>Executing 'stats' command.");
-                Commands.stats.execute(message, args);
+
+                if (Util.permCheck(message.member.guild.me, PLAYER_PERMS.stats)) {
+                    console.log(">>Executing 'stats' command.");
+                    Commands.stats.execute(message, args);
+                } else {
+                    Util.permDenied(PLAYER_PERMS.stats);
+                }
                 break;
 
             // Detected 'prefix'
             case 'prefix':
-                // TODO: Check permissions for message sender
                 
-                console.log(">>Executing 'prefix' command.");
-                Commands.prefix.execute(message, args);
+                if (Util.permCheck(message.member.guild.me, PLAYER_PERMS.prefix)) {
+                    console.log(">>Executing 'prefix' command.");
+                    Commands.prefix.execute(message, args);
+                } else {
+                    Util.permDenied(PLAYER_PERMS.prefix);
+                }
         }
     }
 })
