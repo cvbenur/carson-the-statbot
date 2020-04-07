@@ -15,6 +15,7 @@ bot.on('ready', () => {
     console.log('Bot online.');
 })
 
+PLAYER_PERMS = config.DEFAULT_PERMS;
 
 
 
@@ -33,7 +34,7 @@ bot.on('message', message => {
     PREFIX = prefixes[message.guild.id].prefix;
 
 
-    
+
     // Logging the message in the console
     Util.logMessage(message);
 
