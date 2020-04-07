@@ -50,11 +50,11 @@ function printEmbedFromMessage(embeds, msgAuthor) {
 
 
 module.exports = {
-    answerify (text) {
+    answerify (description) {
         return new Discord.MessageEmbed()
             .setTitle('Carson says')
             .setColor("#FFFFFF")
-            .setDescription(text);
+            .setDescription(description);
     },
 
     
