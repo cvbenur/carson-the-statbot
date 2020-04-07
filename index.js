@@ -75,7 +75,7 @@ bot.on('message', message => {
 
             // Detected 'reset'
             case 'reset':
-                Run.command(message, 'reset', args);
+                Run.command(message, 'reset');
                 break;
 
             // Detected 'stats'

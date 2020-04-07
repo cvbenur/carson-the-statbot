@@ -49,7 +49,7 @@ module.exports = {
 
                 if (Util.permCheck(message.member.guild.me, PLAYER_PERMS.reset)) {
                     console.log(">>Executing 'reset' command.");
-                    Commands.reset.execute(message, args);
+                    Commands.reset.execute(message);
                 } else {
                     message.channel.send(Util.permDenied(PLAYER_PERMS.reset));
                 }
