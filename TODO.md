@@ -42,14 +42,14 @@ Computing stats and sending back links to the generated stats.
 ### **Keywords for the `stats` command**
 Forms recognized by the bot.
 
-- **`<channel>`** arguments must be preceeded by a **`:`** symbol.
-> **E.g.** **`:chan`** will refer to channel 'chan'.
+- **`<channel>`** arguments must be preceeded by **`c:`**.
+> **E.g.** **`c:chan`** will refer to channel 'chan'.
 
-- **`<player>`** arguments must be preceeded by a **`'`** symbol.
-> **E.g.** **`"dude`** will refer to player 'dude'.
+- **`<player>`** arguments must be preceeded by a **`p:`**.
+> **E.g.** **`p:dude`** will refer to player 'dude'.
 
-- **`<time>`** arguments must be preceeded by a **`&`** symbol.
-> **E.g.** **`&3`** will refer to '3 weeks'.
+- **`<time>`** arguments must be preceeded by a **`t:`**.
+> **E.g.** **`t:3`** will refer to '3 weeks'.
 
 #### **Answers to `stats` command would be in the form :**
 >
@@ -80,12 +80,40 @@ When giving a value for `prefix` :
 > **\*Stares into the distance\***
 
 
+When giving the current value for `prefix` :
+>
+> #### **Carson says**
+>
+> Uhm... That's already my prefix.<br>
+> Did you not realise this as you were typing this very command ?
+
+
 When giving resetting the default value of `prefix` :
 >
 > #### **Carson says**
 >
-> I haven't heard that prefix in a while...<br>
-> **\*Looks at you suspiciously\***<br>
-> Where do you know it from ?
+> '`prefix`', you say ? I haven't heard that prefix in a while...<br>
+> **\*Suddenly looks at you suspiciously\***<br>
+> Where did you get that from ?
 > 
-> Alright. I guess I'll accept this phrase.
+> Alright. I guess I'll accept this.
+
+<br>
+
+### **The `perms` command**
+Setting the bot's name on the server
+
+- **`perms <role> <list>,<of>,<commands>`** : Allows the `role` role to use the commands from the `list of commands`
+
+#### **Answers to `perms` command would be in the form :**
+
+>
+> #### **Carson says**
+>
+> Heard, and applied.<br>
+> Members of the `role` role will now be able to use the commands :
+> - `list`
+> - `of`
+> - `commands`
+>
+> Use them wisely, guys.
