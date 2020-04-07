@@ -78,5 +78,28 @@ module.exports = {
             // Displaying detected message
             console.log('MSG FROM : ' + msgAuthor + ' -> ' + msg.content);
         }
+    },
+    permCheck(me, perms) {
+
+        let allowed = 0;
+
+        // Checking for every required Permissions
+        perms.forEach(perm => {
+
+            // If the user has this Permission
+            if (me.hasPermission(perm)) {
+
+                allowed ++;
+            }
+        });
+
+        // If the user has every required Permission
+        if (allowed === perms.length) {
+
+            return true;
+        }
+
+        // Else
+        return false;
     }
 };
