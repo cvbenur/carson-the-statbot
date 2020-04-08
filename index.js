@@ -1,14 +1,17 @@
 const Discord = require('discord.js');
-const fs = require('fs');
 const Run = require('./js/run.js');
-const config = require('./config.json');
+const botconfig = require('./config.json');
 const Util = require('./js/utilities.js');
+const { config } = require('dotenv');
 
 
 
 // Initializing bot
+config({
+    path: __dirname + "/.env"
+});
+
 const bot = new Discord.Client();
-bot.login(config.TOKEN);
 
 
 bot.on('ready', () => {
@@ -23,7 +26,7 @@ bot.on('ready', () => {
     });
 })
 
-PLAYER_PERMS = config.DEFAULT_PERMS;
+PLAYER_PERMS = botconfig.DEFAULT_PERMS;
 
 
 
@@ -31,11 +34,11 @@ PLAYER_PERMS = config.DEFAULT_PERMS;
 // Detecting messages
 bot.on('message', message => {
 
-    let prefixes = JSON.parse(fs.readFileSync("./prefixes.json", "utf8"));
+    let prefixes = JSON.parse(Util.fs.readFileSync("./prefixes.json", "utf8"));
 
     if (!prefixes[message.guild.id]) {
         prefixes[message.guild.id] = {
-            prefix: config.DEFAULT_PREFIX
+            prefix: botconfig.DEFAULT_PREFIX
         };
     }
 
@@ -92,4 +95,9 @@ bot.on('message', message => {
                 break;
         }
     }
-})
+});
+
+
+
+// Getting bot's token
+bot.login(process.env.TOKEN);
