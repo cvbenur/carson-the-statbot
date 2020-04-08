@@ -1,4 +1,4 @@
-const Discord = require('discord.js');
+const { Client, Collection } = require('discord.js');
 const { DEFAULT_PERMS, DEFAULT_PREFIX } = require('./config.json');
 const Util = require('./js/utilities.js');
 const { config } = require('dotenv');
@@ -7,9 +7,9 @@ const { readFileSync } = require('fs');
 
 
 // Initializing bot
-const bot = new Discord.Client();
-bot.commands = new Discord.Collection();
-bot.aliases = new Discord.Collection();
+const bot = new Client();
+bot.commands = new Collection();
+bot.aliases = new Collection();
 
 PLAYER_PERMS = DEFAULT_PERMS;
 
