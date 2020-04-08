@@ -1,18 +1,25 @@
+const path = require('path');
 const { readdirSync } = require('fs');
-
 const ascii = require('ascii-table');
-
 const table = new ascii().setHeading("Command", "Load status");
 
+
+const commandsDir = path.join(__dirname, "..", "..", "js", "commands");
+
+
 module.exports = (client) => {
-    readdirSync("./commands/").forEach(dir => {
-        const commands = readdirSync(`./commands/${dir}`).filter(f => f.endsWith(".js"));
+    readdirSync(commandsDir).forEach(dir => {
+
+        const currentDir = path.join(commandsDir, dir);
+        const commands = readdirSync(currentDir).filter(f => f.endsWith(".js"));
 
         for (let file of commands) {
-            let pull = require(`../commands/${dir}/${file}`);
+            const pullPath = path.join(currentDir, file);
+
+            const pull = require(pullPath);
 
             if (pull.name) {
-                client.command.set(pull.name, pull);
+                client.commands.set(pull.name, pull);
                 table.addRow(file, '✔️');
             } else {
                 table.addRow(file, '❌ -> missing file.');
@@ -22,6 +29,8 @@ module.exports = (client) => {
             if (pull.aliases && Array.isArray(pull)) {
                 pull.aliases.forEach(alias => client.aliases.set(alias, pull.name));
             }
+
+            console.log(`Loaded command : ${pullPath.slice(pullPath.indexOf('/js/'))}`);
         }
     });
 }
