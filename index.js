@@ -8,7 +8,7 @@ const { config } = require('dotenv');
 
 // Initializing bot
 config({
-    path: __dirname + "./.env"
+    path: __dirname + "/.env"
 });
 
 const bot = new Discord.Client();
