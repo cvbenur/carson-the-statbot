@@ -1,5 +1,5 @@
 const config = require('../../config.json');
-const Util = require('../utilities.js')
+const Util = require('../../utilities.js')
 
 
 

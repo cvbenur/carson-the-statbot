@@ -1,4 +1,4 @@
-const Util = require('../utilities.js');
+const Util = require('../../utilities.js');
 const Discord = require('discord.js');
 
 
