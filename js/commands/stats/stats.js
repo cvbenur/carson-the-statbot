@@ -6,20 +6,21 @@ module.exports = {
     name: "stats",
     category: "Stat",
     description: "Compiles and sends back stats.",
-    execute (msg, args) {
+    execute: async (msg, args) => {
         // TODO: -c stats commands
 
 
         switch (args.length) {
 
             // If there are no arguments after 'stats'
-            case 2:
+            case 0:
                 msg.channel.send(answerify('Type `' + PREFIX + ' stats help` to get started with some stats.'));
                 break;
 
+                
             // If there is only 1 argument after 'stats'
-            case 3:
-                switch (args[2]) {
+            case 1:
+                switch (args[0]) {
 
                     case 'help':
                         msg.channel.send(

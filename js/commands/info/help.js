@@ -4,7 +4,7 @@ module.exports = {
     name: "help",
     category: "Info",
     description: "Gives you a list of useful commands for Carson.",
-    execute (msg) {
+    execute: async (msg) => {
         msg.channel.send(
             new Discord.MessageEmbed()
             .setTitle('Carson the StatBot')

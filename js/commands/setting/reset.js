@@ -24,7 +24,7 @@ module.exports = {
     name: "reset",
     category: "Setting",
     description: "Resets Carson's configuration to default.",
-    execute(msg) {
+    execute: async (msg) => {
 
         resetPrefix(msg.member.guild.id);
         

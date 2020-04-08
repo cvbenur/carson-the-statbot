@@ -4,7 +4,7 @@ module.exports = {
     name: "start",
     category: "Info",
     description: "The basic help command.",
-    execute (msg) {
+    execute: async (msg) => {
         msg.channel.send(new Discord.MessageEmbed()
             .setTitle('Carson says')
             .setColor("#FFFFFF")
