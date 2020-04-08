@@ -1,17 +1,16 @@
 const Util = require('../utilities.js');
-const fs = require('fs');
 
 
 // Changing the prefix for this server
 function setPrefix(guild, newPref) {
 
-    let prefixes = JSON.parse(fs.readFileSync("./prefixes.json", "utf8"));
+    let prefixes = JSON.parse(Util.fs.readFileSync("./prefixes.json", "utf8"));
 
     prefixes[guild.id] = {
         prefix: newPref
     };
 
-    fs.writeFileSync("./prefixes.json", JSON.stringify(prefixes), (err) => {
+    Util.fs.writeFileSync("./prefixes.json", JSON.stringify(prefixes), (err) => {
         if (err) console.log(err);
     });
 

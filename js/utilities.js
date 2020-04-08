@@ -50,6 +50,9 @@ function printEmbedFromMessage(embeds, msgAuthor) {
 
 
 module.exports = {
+    fs: require('fs'),
+
+
     answerify (description) {
         return new Discord.MessageEmbed()
             .setTitle('Carson says')
