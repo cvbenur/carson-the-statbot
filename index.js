@@ -100,4 +100,4 @@ bot.on('message', message => {
 
 
 // Getting bot's token
-bot.login(proces.env.TOKEN);
+bot.login(process.env.TOKEN);
