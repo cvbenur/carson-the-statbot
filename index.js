@@ -77,7 +77,7 @@ bot.on('message', async message => {
 
 
     // Detecting commands destined to this bot in messages
-    if (!message.content.startsWith(PREFIX) || message.author.bot) return;
+    if (!message.content.startsWith(PREFIX.trim()) || message.author.bot) return;
 
 
     // Decomposing the message into arguments
