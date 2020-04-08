@@ -35,7 +35,7 @@ bot.on('ready', () => {
     console.log('Bot online.');
 
     bot.user.setActivity(
-        'my code getting written!',
+        'Benur write my code',
         { type: "WATCHING" }
     );
 });
