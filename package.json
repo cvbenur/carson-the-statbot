@@ -1,5 +1,5 @@
 {
-  "name": "test-statbot",
+  "name": "carson-statbot",
   "version": "1.0.0",
   "description": "Write README.md / doc.",
   "main": "index.js",
