@@ -20,6 +20,7 @@ function setPrefix(guild, newPref) {
 
 module.exports = {
     name: "prefix",
+    category: "Setting",
     description: "Command to set or reset the bot's prefix.",
     execute(msg, args) {
         

@@ -1,4 +1,4 @@
-const config = require('../../config.json');
+const config = require('../../../config.json');
 const Util = require('../../utilities.js')
 
 
@@ -22,6 +22,7 @@ function resetPrefix (id) {
 
 module.exports = {
     name: "reset",
+    category: "Setting",
     description: "Resets Carson's configuration to default.",
     execute(msg) {
 

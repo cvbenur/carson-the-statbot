@@ -4,6 +4,7 @@ const Discord = require('discord.js');
 
 module.exports = {
     name: "stats",
+    category: "Stat",
     description: "Compiles and sends back stats.",
     execute (msg, args) {
         // TODO: -c stats commands

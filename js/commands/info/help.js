@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 
 module.exports = {
     name: "help",
+    category: "Info",
     description: "Gives you a list of useful commands for Carson.",
     execute (msg) {
         msg.channel.send(
