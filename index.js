@@ -13,6 +13,14 @@ bot.login(config.TOKEN);
 
 bot.on('ready', () => {
     console.log('Bot online.');
+
+    bot.user.setPresence({
+        status: "online",
+        game: {
+            name: "Getting my code all written up!",
+            type: "WATCHING"
+        }
+    });
 })
 
 PLAYER_PERMS = config.DEFAULT_PERMS;
