@@ -50,9 +50,7 @@ function printEmbedFromMessage(embeds, msgAuthor) {
 
 
 module.exports = {
-    fs: require('fs'),
-
-
+    // Formats a MessageEmbed with some text
     answerify (description) {
         return new Discord.MessageEmbed()
             .setTitle('Carson says')
@@ -61,11 +59,13 @@ module.exports = {
     },
 
     
+    // "Work In Progress"
     WIP () {
         return this.answerify(':warning: Work in progress... Come back a bit later !');
     },
 
 
+    // Log a message to the console
     logMessage(msg) {
 
         let msgAuthor = msg.member.displayName;
@@ -91,32 +91,33 @@ module.exports = {
     },
 
 
-    permCheck(me, perms) {
+    // Checking the user's permissions
+    permCheck(command, member, permissions) {
 
         let allowed = 0;
 
-        // Checking for every required Permissions
-        perms.forEach(perm => {
 
-            // If the user has this Permission
-            if (me.hasPermission(perm)) {
+        // Getting the required permissions
+        const targetPerms = permissions.filter(
+            function(permissions){ return permissions.name == command }
+        )[0].perms;
 
-                allowed ++;
 
-            }
-        });
+        // Checking that the user has the correct permissions
+        targetPerms.forEach(p => {
+            if (member.hasPermission(p)) allowed++;
+        })
+
 
         // If the user has every required Permission
-        if (allowed === perms.length) {
-
-            return true;
-        }
+        if (allowed === targetPerms.length) return true;
 
         // Else
         return false;
     },
 
 
+    // Permission denied
     permDenied(perms) {
 
         // Logging the event into the console

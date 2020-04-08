@@ -1,16 +1,17 @@
-const Util = require('../utilities.js');
+const Util = require('../../utilities.js');
+const { readFileSync, writeFileSync } = require('fs');
 
 
 // Changing the prefix for this server
-function setPrefix(guild, newPref) {
+function setPrefix(id, newPref) {
 
-    let prefixes = JSON.parse(Util.fs.readFileSync("./prefixes.json", "utf8"));
+    let prefixes = JSON.parse(readFileSync("./prefixes.json", "utf8"));
 
-    prefixes[guild.id] = {
+    prefixes[id] = {
         prefix: newPref
     };
 
-    Util.fs.writeFileSync("./prefixes.json", JSON.stringify(prefixes), (err) => {
+    writeFileSync("./prefixes.json", JSON.stringify(prefixes), (err) => {
         if (err) console.log(err);
     });
 
@@ -20,27 +21,28 @@ function setPrefix(guild, newPref) {
 
 module.exports = {
     name: "prefix",
+    category: "Setting",
     description: "Command to set or reset the bot's prefix.",
-    execute(msg, args) {
+    execute: (msg, args) => {
         
         // Checking the number of arguments
         switch (args.length) {
 
             // Setting the prefix to default prefix '-c'
-            case 2:
+            case 0:
 
                 // Reseting the prefix
                 setPrefix(msg.guild, '-c');
                 console.log('>>Prefix set to default prefix : \'' + PREFIX + '\'.');
 
                 msg.channel.send(
-                    Util.answerify('\'`' + PREFIX + '`\', you say ?\n... I haven\'t heard that prefix in a while...\n**\*Suddenly looks at you suspiciously\***\nWhere did you get that from ?\n\nAlright. I guess I\'ll accept this.')
+                    Util.answerify('Resetting my prefix to \'`' + PREFIX + '`\'.\nI\'ll only answer to this now. Don\'t even try.')
                 );
                 break;
 
 
             // Setting the prefix to the new prefix
-            case 3:
+            case 1:
 
                 // If the new prefix is already the current prefix
                 if (args[2] === PREFIX) {
@@ -52,7 +54,7 @@ module.exports = {
                 } else {
 
                     // Setting the prefix to the new phrase
-                    setPrefix(msg.guild, args[2]);
+                    setPrefix(msg.guild, args[0]);
                     console.log('>>Prefix set to : \'' + PREFIX + '\'.');
 
                     msg.channel.send(

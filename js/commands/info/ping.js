@@ -1,9 +1,10 @@
-const Util = require('../utilities.js');
+const Util = require('../../utilities.js');
 
 module.exports = {
     name: 'ping',
+    category: "Info",
     description: 'Ping command',
-    execute(msg) {
+    execute: async (msg) => {
         switch(Math.floor(Math.random() * 6) + 1) {
             case 0:
                 msg.channel.send(Util.answerify('Pong!'));
