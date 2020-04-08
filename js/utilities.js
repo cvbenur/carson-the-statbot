@@ -133,7 +133,7 @@ module.exports = {
             message += '\n\t - ' + perm;
         });
 
-        message += '\n\nContact one of your server\'s Admins in order to sort this out.';
+        message += '\n\nContact one of your server\'s administrators in order to sort this out.';
 
         return this.answerify(message);
     }
