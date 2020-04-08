@@ -1,5 +1,6 @@
 const Util = require('../../utilities.js');
 const { readFileSync, writeFileSync } = require('fs');
+const { DEFAULT_PREFIX } = require('../../../config.json');
 
 
 // Changing the prefix for this server
@@ -32,7 +33,7 @@ module.exports = {
             case 0:
 
                 // Reseting the prefix
-                setPrefix(msg.guild, '-c');
+                setPrefix(msg.guild, DEFAULT_PREFIX);
                 console.log('>>Prefix set to default prefix : \'' + PREFIX + '\'.');
 
                 msg.channel.send(

@@ -1,4 +1,4 @@
-const Discord = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 
 
@@ -52,7 +52,7 @@ function printEmbedFromMessage(embeds, msgAuthor) {
 module.exports = {
     // Formats a MessageEmbed with some text
     answerify (description) {
-        return new Discord.MessageEmbed()
+        return new MessageEmbed()
             .setTitle('Carson says')
             .setColor("#FFFFFF")
             .setDescription(description);

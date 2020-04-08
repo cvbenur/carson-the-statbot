@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const botconfig = require('./config.json');
+const { DEFAULT_PERMS, DEFAULT_PREFIX } = require('./config.json');
 const Util = require('./js/utilities.js');
 const { config } = require('dotenv');
 const { readFileSync } = require('fs');
@@ -11,7 +11,7 @@ const bot = new Discord.Client();
 bot.commands = new Discord.Collection();
 bot.aliases = new Discord.Collection();
 
-PLAYER_PERMS = botconfig.DEFAULT_PERMS;
+PLAYER_PERMS = DEFAULT_PERMS;
 
 ["command"].forEach(handler => {
     console.log('Loading commands...');
@@ -61,7 +61,7 @@ bot.on('message', async message => {
 
     if (!prefixes[message.guild.id]) {
         prefixes[message.guild.id] = {
-            prefix: botconfig.DEFAULT_PREFIX
+            prefix: DEFAULT_PREFIX
         };
     }
 

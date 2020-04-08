@@ -1,5 +1,5 @@
-const Util = require('../../utilities.js');
-const Discord = require('discord.js');
+const { answerify, WIP } = require('../../utilities.js');
+const { MessageEmbed } = require('discord.js');
 
 
 module.exports = {
@@ -14,7 +14,7 @@ module.exports = {
 
             // If there are no arguments after 'stats'
             case 0:
-                msg.channel.send(Util.answerify('Type `' + PREFIX + ' stats help` to get started with some stats.'));
+                msg.channel.send(answerify('Type `' + PREFIX + ' stats help` to get started with some stats.'));
                 break;
 
                 
@@ -24,7 +24,7 @@ module.exports = {
 
                     case 'help':
                         msg.channel.send(
-                            new Discord.MessageEmbed()
+                            new MessageEmbed()
                                 .setTitle('Carson says')
                                 .setColor("#FFFFFF")
                                 .setDescription('Here is a list of heywords to use with `' + PREFIX + ' stats`.')
@@ -72,7 +72,7 @@ module.exports = {
                     case 'global':
                         // TODO: Add 'stats global' command
                         msg.channel.send(
-                            Util.WIP()
+                           WIP()
                         );
 
 

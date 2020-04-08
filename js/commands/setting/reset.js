@@ -1,4 +1,4 @@
-const config = require('../../../config.json');
+const { DEFAULT_PREFIX } = require('../../../config.json');
 const Util = require('../../utilities.js')
 const { readFileSync, writeFileSync } = require('fs');
 
@@ -9,14 +9,14 @@ function resetPrefix (id) {
     let prefixes = JSON.parse(readFileSync("./prefixes.json", "utf8"));
         
     prefixes[id] = {
-        prefix: config.DEFAULT_PREFIX
+        prefix: DEFAULT_PREFIX
     };
 
     writeFileSync("./prefixes.json", JSON.stringify(prefixes), (err) => {
         if (err) console.log(err);
     });
 
-    PREFIX = config.DEFAULT_PREFIX;
+    PREFIX = DEFAULT_PREFIX;
 }
 
 

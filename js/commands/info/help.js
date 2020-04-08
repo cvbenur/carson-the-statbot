@@ -1,4 +1,4 @@
-const Discord = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
     name: "help",
@@ -6,7 +6,7 @@ module.exports = {
     description: "Gives you a list of useful commands for Carson.",
     execute: async (msg) => {
         msg.channel.send(
-            new Discord.MessageEmbed()
+            new MessageEmbed()
             .setTitle('Carson the StatBot')
             .setColor("#FFFFFF")
             .setDescription('Carson is an easy to use - although VERY sassy - statistics compiling bot for your Discord server.\n\nHe can pretty much tell you anything you might want to know, with pretty, easy-to-read little graphs.')
