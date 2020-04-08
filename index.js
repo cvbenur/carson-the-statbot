@@ -34,6 +34,11 @@ PLAYER_PERMS = botconfig.DEFAULT_PERMS;
 // Detecting messages
 bot.on('message', message => {
 
+    if (message.channel.type === "dm") {
+        message.author.send(Util.answerify("Sorry, I only respond in servers !"));
+        return;
+    }
+
     let prefixes = JSON.parse(Util.fs.readFileSync("./prefixes.json", "utf8"));
 
     if (!prefixes[message.guild.id]) {
