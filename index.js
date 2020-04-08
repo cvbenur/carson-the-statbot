@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const botconfig = require('./config.json');
 const Util = require('./js/utilities.js');
 const { config } = require('dotenv');
+const { readFileSync } = require('fs');
 
 
 
@@ -56,7 +57,7 @@ bot.on('message', async message => {
 
 
 
-    let prefixes = JSON.parse(Util.fs.readFileSync("./prefixes.json", "utf8"));
+    let prefixes = JSON.parse(readFileSync("./prefixes.json", "utf8"));
 
     if (!prefixes[message.guild.id]) {
         prefixes[message.guild.id] = {
@@ -67,6 +68,7 @@ bot.on('message', async message => {
     PREFIX = prefixes[message.guild.id].prefix;
 
 
+    const perms = PLAYER_PERMS;
 
     // Logging the message in the console
     Util.logMessage(message);
@@ -80,90 +82,91 @@ bot.on('message', async message => {
 
     // Decomposing the message into arguments
     const args = message.content.slice(PREFIX.length).trim().split(/ +/g);
-    const cmd = args;
+    var cmd = args.shift().toLowerCase();
 
+    
+    // Detecting only the prefix
+    if (cmd === "") cmd = 'start';
+
+
+    // Getting the command function
     let command = bot.commands.get(cmd);
     if (!command) command = bot.commands.get(bot.aliases.get(cmd));
 
 
+    // Triggering command according to 1st argument after prefix
+    switch(cmd) {
 
+        // Detected 'help'
+        case 'start':
 
-    // Running the commands
-    if (cmd.length === 0) {    // Message is the prefix only
-
-        if (command) {
-            if (Util.permCheck(message.member.guild.me, perms)) {
-                console.log(">>Executing 'start' command.");
+            if (Util.permCheck(cmd, message.member.guild.me, perms)) {
+                console.log(">>Executing 'help' command.");
                 command.execute(message);
             } else {
                 message.channel.send(Util.permDenied(perms));
             }
-        }
+            break;
 
-    } else { 
 
-        // Triggering command according to 1st argument after prefix
-        switch(cmd) {
+        // Detected 'help'
+        case 'help':
 
-            // Detected 'help'
-            case 'help':
+            if (Util.permCheck(cmd, message.member.guild.me, perms)) {
+                console.log(">>Executing 'help' command.");
+                command.execute(message);
+            } else {
+                message.channel.send(Util.permDenied(perms));
+            }
+            break;
+        
 
-                if (Util.permCheck(message.member.guild.me, perms)) {
-                    console.log(">>Executing 'help' command.");
-                    command.execute(message);
-                } else {
-                    message.channel.send(Util.permDenied(perms));
-                }
-                break;
+        // Detected 'ping'
+        case 'ping':
+
+            if (Util.permCheck(cmd, message.member.guild.me, perms)) {
+                console.log(">>Executing 'ping' command.");
+                command.execute(message);
+            } else {
+                message.channel.send(Util.permDenied(perms));
+            }
+            break;
+        
+
+        // Detected 'prefix'
+        case 'prefix':
             
-
-            // Detected 'ping'
-            case 'ping':
-
-                if (Util.permCheck(message.member.guild.me, perms)) {
-                    console.log(">>Executing 'ping' command.");
-                    command.execute(message);
-                } else {
-                    message.channel.send(Util.permDenied(perms));
-                }
-                break;
-            
-
-            // Detected 'prefix'
-            case 'prefix':
-                
-                if (Util.permCheck(message.member.guild.me, perms)) {
-                    console.log(">>Executing 'prefix' command.");
-                    command.execute(message, args);
-                } else {
-                    message.channel.send(Util.permDenied(perms));
-                }
-                break;
+            if (Util.permCheck(cmd, message.member.guild.me, perms)) {
+                console.log(">>Executing 'prefix' command.");
+                command.execute(message, args);
+            } else {
+                message.channel.send(Util.permDenied(perms));
+            }
+            break;
 
 
-            // Detected 'reset'
-            case 'reset':
+        // Detected 'reset'
+        case 'reset':
 
-                if (Util.permCheck(message.member.guild.me, perms)) {
-                    console.log(">>Executing 'reset' command.");
-                    command.execute(message);
-                } else {
-                    message.channel.send(Util.permDenied(perms));
-                }
-                break;
+            if (Util.permCheck(cmd, message.member.guild.me, perms)) {
+                console.log(">>Executing 'reset' command.");
+                command.execute(message);
+            } else {
+                message.channel.send(Util.permDenied(perms));
+            }
+            break;
 
 
-            // Detected 'stats'
-            case 'stats':
+        // Detected 'stats'
+        case 'stats':
 
-                if (Util.permCheck(message.member.guild.me, perms)) {
-                    console.log(">>Executing 'stats' command.");
-                    command.execute(message, args);
-                } else {
-                    message.channel.send(Util.permDenied(perms));
-                }
-                break;
-        }
+            if (Util.permCheck(cmd, message.member.guild.me, perms)) {
+                console.log(">>Executing 'stats' command.");
+                command.execute(message, args);
+            } else {
+                message.channel.send(Util.permDenied(perms));
+            }
+            break;
     }
 });
 
