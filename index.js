@@ -1,4 +1,4 @@
-const { Client, Collection } = require('discord.js');
+const { Client, Collection, Activity } = require('discord.js');
 const { DEFAULT_PERMS, DEFAULT_PREFIX } = require('./config.json');
 const Util = require('./js/utilities.js');
 const { config } = require('dotenv');
@@ -34,14 +34,11 @@ config({
 bot.on('ready', () => {
     console.log('Bot online.');
 
-    bot.user.setPresence({
-        status: "online",
-        game: {
-            name: "Getting my code all written up!",
-            type: "WATCHING"
-        }
-    });
-})
+    bot.user.setActivity(
+        'my code getting written!',
+        { type: "WATCHING" }
+    );
+});
 
 
 
