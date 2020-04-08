@@ -14,7 +14,7 @@ module.exports = {
 
             // If there are no arguments after 'stats'
             case 0:
-                msg.channel.send(answerify('Type `' + PREFIX + ' stats help` to get started with some stats.'));
+                msg.channel.send(Util.answerify('Type `' + PREFIX + ' stats help` to get started with some stats.'));
                 break;
 
                 

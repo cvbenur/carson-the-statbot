@@ -1,17 +1,18 @@
 const config = require('../../../config.json');
 const Util = require('../../utilities.js')
+const { readFileSync, writeFileSync } = require('fs');
 
 
 
 // Reseting prefix to default
 function resetPrefix (id) {
-    let prefixes = JSON.parse(Util.fs.readFileSync("./prefixes.json", "utf8"));
+    let prefixes = JSON.parse(readFileSync("./prefixes.json", "utf8"));
         
     prefixes[id] = {
         prefix: config.DEFAULT_PREFIX
     };
 
-    Util.fs.writeFileSync("./prefixes.json", JSON.stringify(prefixes), (err) => {
+    writeFileSync("./prefixes.json", JSON.stringify(prefixes), (err) => {
         if (err) console.log(err);
     });
 
