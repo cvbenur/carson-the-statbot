@@ -1,5 +1,5 @@
 const { answerify } = require('../../utilities.js');
-const { MessageEmbed, TextChannel } = require('discord.js');
+const { MessageEmbed, TextChannel, GuildMember } = require('discord.js');
 const { EMBED_COLOR } = require('../../../config.json');
 const moment = require('moment');
 
@@ -7,7 +7,7 @@ const moment = require('moment');
 
 // Returning a channel object from a name
 function getChannelFromName (msg, name) {
-    if (name === 'all') return 'global';
+    if (name === 'all') return 'all';
 
     const found = msg.member.guild.channels.cache.find(channel => channel.name.includes(name.toLowerCase()));
 
@@ -21,7 +21,7 @@ function getChannelFromName (msg, name) {
 
 // Returning a member object from a name
 async function getPlayerFromName (msg, name) {
-    if (name === 'all') return 'global';
+    if (name === 'all') return 'all';
 
     let found = (await msg.guild.members.fetch({ query: name, limit: 1 })).entries().next().value[1];
     return found === undefined ? -1 : found;
@@ -29,7 +29,7 @@ async function getPlayerFromName (msg, name) {
 
 // Returning a moment
 function getTimeFromArg (arg) {
-    if (arg === 'all') return 'global';
+    if (arg === 'all') return 'all';
 
     const now = new moment();
 
@@ -47,17 +47,17 @@ function sendBackStats (msg, line) {
     let sendback='**Your query:**\n';
 
     if (line.chan != '') {
-        if (line.chan === 'global') sendback += 'Channel(s) : all.\n';
+        if (line.chan === 'all') sendback += 'Channel(s) : all.\n';
         else sendback += `Channel(s) : ${line.chan}\n`;
     }
 
     if (line.member != '') {
-        if (line.member === 'global') sendback += 'Player(s) : all.\n';
+        if (line.member === 'all') sendback += 'Player(s) : all.\n';
         else sendback += `Player : ${line.member.toString()}\n`;
     }
 
     if (line.time != '') {
-        if (line.time === 'global') sendback += 'Time : none specified.\n';
+        if (line.time === 'all') sendback += 'Time : none specified.\n';
         else sendback += `Time : \"${line.time}\".\n`;
     }
 
@@ -69,10 +69,10 @@ async function parseArgs(msg, args) {
 
     return new Promise((resolve, reject) => {
 
-        let hasGlobal = false;
-        let hasChannel = false;
-        let hasPlayer = false;
-        let hasTime = false;
+        let nbrAll = 0;
+        let nbrChannel = 0;
+        let nbrPlayer = 0;
+        let nbrTime = 0;
 
         let line = {
             chan: '',
@@ -84,36 +84,41 @@ async function parseArgs(msg, args) {
 
         args.forEach(async arg => {
 
-            if (args.length === 1 && arg.trim() === 'all') {
-                line.chan = 'global';
-                line.member = 'global';
-                line.time = 'global';
+            if (arg.trim() === 'all') {
+                if (++nbrAll > 1) reject('Error : Too many `all` arguments.');
+
+                line.chan = 'all';
+                line.member = 'all';
+                line.time = 'all';
             } else if (arg.trim().startsWith('c:')) {
     
-                hasChannel = true;
+                if (++nbrChannel > 1) reject('Error : Too many `c:` arguments.');
+
                 const channel = getChannelFromName(msg, arg.split('c:')[1]);
     
-                if (channel === -1) reject(`Error : channel \"${arg.split('c:')}\"not found.`);
+                if (channel === -1) reject(`Sorry, I couldn't find channel \`${arg.split('c:')[1]}\`.\n\nDid you check the spelling?`);
     
                 console.log(`Channel detected : \"${channel.name}\"`);
                 line.chan = channel;
     
             } else if (arg.trim().startsWith('p:')) {
     
-                hasPlayer = true;
+                if (++nbrPlayer > 1) reject('Error : Too many `p:` arguments.');
+
                 const player = await getPlayerFromName(msg, arg.split('p:')[1]);
     
-                if (player === -1) reject(`Error : player ${arg.split('p:')} not found.`);
+                if (player === undefined) reject(`Sorry, I couldn't find player \`${arg.split('p:')[1]}\`.\n\nDid you check the spelling?`);
     
                 console.log(`Player detected : \"${player.displayName}\"`);
                 line.member = player;
     
             } else if (arg.trim().startsWith('t:')) {
     
-                hasTime = true;
+                if (++nbrTime > 1) reject('I din\'t quite catch that... There were too many `t:` arguments.');
+
                 const date = getTimeFromArg(arg.split('t:')[1]);
     
-                if (!(date instanceof moment)) reject('Wrong argument for time.');
+                if (!(date instanceof moment)) reject(`Sorry, \`${arg.split('t:')[1]}\` isn't a valid number of weeks.`);
     
                 console.log(`Time detected : \"${date}\".`);
                 line.time = date;
@@ -123,10 +128,6 @@ async function parseArgs(msg, args) {
 
             if (++ctr == args.length) resolve(line);
         });
-
-        if (hasChannel && hasGlobal) {
-            reject(`Error : channel && global.`);
-        }
     })
 
 }
@@ -201,7 +202,7 @@ module.exports = {
         try {
             sendBackStats(msg, await parseArgs(msg, args));
         } catch (error) {
-            console.log(error);
+            msg.reply(answerify(error));
         }
     }
 };
