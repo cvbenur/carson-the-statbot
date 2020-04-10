@@ -1,14 +1,12 @@
-const { MessageEmbed } = require('discord.js');
+const { answerify } = require('../../utilities.js');
+
+
 
 module.exports = {
     name: "start",
     category: "Info",
     description: "The basic help command.",
     execute: async (msg) => {
-        msg.channel.send(new MessageEmbed()
-            .setTitle('Carson says')
-            .setColor("#FFFFFF")
-            .setDescription('Just type `' + PREFIX + ' help` to get started.')
-        );
+        msg.channel.send(answerify('Just type `' + PREFIX.trim() + ' help` to get started.'));
     }
 };
