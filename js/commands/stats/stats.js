@@ -1,5 +1,6 @@
 const { answerify } = require('../../utilities.js');
 const { MessageEmbed, TextChannel } = require('discord.js');
+const { EMBED_COLOR } = require('../../../config.json');
 const moment = require('moment');
 
 
@@ -60,7 +61,7 @@ function sendBackStats (msg, line) {
         else sendback += `Time : \"${line.time}\".\n`;
     }
 
-    msg.channel.send(answerify(sendback));
+    msg.reply(answerify(sendback));
 }
 
 // Parsing arguments to 'stats' command
@@ -151,7 +152,7 @@ module.exports = {
             msg.channel.send(
                 new MessageEmbed()
                     .setTitle('Carson says')
-                    .setColor("#FFFFFF")
+                    .setColor(EMBED_COLOR)
                     .setDescription('Here is a list of heywords to use with `' + PREFIX + ' stats`.')
                     .addFields(
                     {

@@ -1,4 +1,5 @@
 const { MessageEmbed } = require('discord.js');
+const { EMBED_COLOR } = require('../config.json');
 
 
 
@@ -49,7 +50,7 @@ function printEmbedFromMessage (embeds, msgAuthor) {
 function answerify (description) {
     return new MessageEmbed()
         .setTitle('Carson says')
-        .setColor("#FFFFFF")
+        .setColor(EMBED_COLOR)
         .setDescription(description);
 }
 
