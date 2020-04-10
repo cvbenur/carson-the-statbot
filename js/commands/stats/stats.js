@@ -29,7 +29,7 @@ async function getPlayerFromName (msg, name) {
 
 // Returning a moment
 function getTimeFromArg (arg) {
-    if (arg === 'all') return 'global';
+    if (arg === 'all') return 'all';
 
     const now = new moment();
 
@@ -47,17 +47,17 @@ function sendBackStats (msg, line) {
     let sendback='**Your query:**\n';
 
     if (line.chan != '') {
-        if (line.chan === 'global') sendback += 'Channel(s) : all.\n';
+        if (line.chan === 'all') sendback += 'Channel(s) : all.\n';
         else sendback += `Channel(s) : ${line.chan}\n`;
     }
 
     if (line.member != '') {
-        if (line.member === 'global') sendback += 'Player(s) : all.\n';
+        if (line.member === 'all') sendback += 'Player(s) : all.\n';
         else sendback += `Player : ${line.member.toString()}\n`;
     }
 
     if (line.time != '') {
-        if (line.time === 'global') sendback += 'Time : none specified.\n';
+        if (line.time === 'all') sendback += 'Time : none specified.\n';
         else sendback += `Time : \"${line.time}\".\n`;
     }
 
@@ -69,10 +69,10 @@ async function parseArgs(msg, args) {
 
     return new Promise((resolve, reject) => {
 
-        let hasGlobal = false;
-        let hasChannel = false;
-        let hasPlayer = false;
-        let hasTime = false;
+        let nbrAll = 0;
+        let nbrChannel = 0;
+        let nbrPlayer = 0;
+        let nbrTime = 0;
 
         let line = {
             chan: '',
@@ -85,12 +85,15 @@ async function parseArgs(msg, args) {
         args.forEach(async arg => {
 
             if (args.length === 1 && arg.trim() === 'all') {
-                line.chan = 'global';
-                line.member = 'global';
-                line.time = 'global';
+                if (++nbrAll > 1) reject('Error : Too many `all` arguments.');
+
+                line.chan = 'all';
+                line.member = 'all';
+                line.time = 'all';
             } else if (arg.trim().startsWith('c:')) {
     
-                hasChannel = true;
+                if (++nbrChannel > 1) reject('Error : Too many channels (\'`c:`\') arguments.');
+
                 const channel = getChannelFromName(msg, arg.split('c:')[1]);
     
                 if (channel === -1) reject(`Error : channel \"${arg.split('c:')}\"not found.`);
@@ -100,7 +103,8 @@ async function parseArgs(msg, args) {
     
             } else if (arg.trim().startsWith('p:')) {
     
-                hasPlayer = true;
+                if (++nbrPlayer > 1) reject('Error : Too many player (\'`p:`\') arguments.');
+
                 const player = await getPlayerFromName(msg, arg.split('p:')[1]);
     
                 if (player === -1) reject(`Error : player ${arg.split('p:')} not found.`);
@@ -110,7 +114,8 @@ async function parseArgs(msg, args) {
     
             } else if (arg.trim().startsWith('t:')) {
     
-                hasTime = true;
+                if (++nbrTime > 1) reject('Error : Too many time (\'`t:`\') arguments.');
+
                 const date = getTimeFromArg(arg.split('t:')[1]);
     
                 if (!(date instanceof moment)) reject('Wrong argument for time.');
@@ -124,9 +129,7 @@ async function parseArgs(msg, args) {
             if (++ctr == args.length) resolve(line);
         });
 
-        if (hasChannel && hasGlobal) {
-            reject(`Error : channel && global.`);
-        }
+        
     })
 
 }
