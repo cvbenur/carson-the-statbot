@@ -1,5 +1,5 @@
-const { answerify, WIP } = require('../../utilities.js');
-const { MessageEmbed } = require('discord.js');
+const { answerify } = require('../../utilities.js');
+const { MessageEmbed, TextChannel } = require('discord.js');
 const moment = require('moment');
 
 
@@ -18,7 +18,7 @@ function getChannelFromName (msg, name) {
 
 async function getPlayerFromName (msg, name) {
     let found = (await msg.guild.members.fetch({ query: name, limit: 1 })).entries().next().value[1];
-    return found === undefined ? -1 : found;
+    return found;
 }
 
 
@@ -117,19 +117,19 @@ module.exports = {
                     return;
                 }
 
-                console.log(`Channel detected : ${channel.name}`);
+                console.log(`Channel detected : \"${channel.name}\"`);
 
             } else if (arg.trim().startsWith('p:')) {
 
                 hasPlayer = true;
                 const player = await getPlayerFromName(msg, arg.split('p:')[1]);
 
-                if (player === -1) {
+                if (player === undefined) {
                     console.log('Error : player not found.');
                     return;
                 }
 
-                console.log(`Player detected : ${player.displayName}`);
+                console.log(`Player detected : \"${player.displayName}\"`);
 
             } else if (arg.trim().startsWith('t:')) {
 
@@ -156,7 +156,7 @@ module.exports = {
                     return;
                 }
 
-                console.log(`Time detected : ${date}`);
+                console.log(`Time detected : \"${date}\"`);
 
             } else if (arg.trim() === 'global') {
 
@@ -165,7 +165,7 @@ module.exports = {
 
             } else {
 
-                console.log(`Error with argument : ${arg}`);
+                console.log(`Error with argument : \"${arg}\"`);
                 return;
 
             }
