@@ -45,18 +45,21 @@ function printEmbedFromMessage (embeds, msgAuthor) {
     });
 }
 
+// Formats a MessageEmbed with some text
+function answerify (description) {
+    return new MessageEmbed()
+        .setTitle('Carson says')
+        .setColor("#FFFFFF")
+        .setDescription(description);
+}
+
 
 
 
 
 module.exports = {
-    // Formats a MessageEmbed with some text
-    answerify: (description) => {
-        return new MessageEmbed()
-            .setTitle('Carson says')
-            .setColor("#FFFFFF")
-            .setDescription(description);
-    },
+    
+    answerify,
 
     
     // "Work In Progress"
@@ -92,9 +95,10 @@ module.exports = {
 
 
     // Checking the user's permissions
-    permCheck: (command, member, permissions) => {
+    permCheck: (command, msg, permissions) => {
 
         let allowed = 0;
+        let deniedList = 'Sorry, you don\'t have the right permissions for this command.\n\nThe required permissions are :\n';
 
 
         // Getting the required permissions
@@ -105,7 +109,8 @@ module.exports = {
 
         // Checking that the user has the correct permissions
         targetPerms.forEach(p => {
-            if (member.hasPermission(p)) allowed++;
+            if (msg.member.hasPermission(p)) allowed++;
+            else deniedList += `- ${p}\n`;
         })
 
 
@@ -113,29 +118,8 @@ module.exports = {
         if (allowed === targetPerms.length) return true;
 
         // Else
+        msg.reply(answerify(deniedList + '\nContact one of your server\'s administrators in order to sort this out.'));
         return false;
-    },
-
-
-    // Permission denied
-    permDenied: (perms) => {
-
-        // Logging the event into the console
-        console.log('Permission denied.');
-
-
-        let message = 'Sorry, you don\'t have the right permissions for this command.\nThe required permissions are :';
-
-        // For each of the required permissions
-        perms.forEach(perm => {
-
-            // Adding this permission to the message
-            message += '\n\t - ' + perm;
-        });
-
-        message += '\n\nContact one of your server\'s administrators in order to sort this out.';
-
-        return this.answerify(message);
     },
 
 
@@ -146,9 +130,9 @@ module.exports = {
 
         for (let arg of args) {
             
-            if (arg.endsWith('\\')) {
+            if (arg.endsWith(WS_SYMBOL)) {
                 if (args[ctr+1] && (!args[ctr+1].startsWith('c:') && !args[ctr+1].startsWith('t:'))) {
-                    args[ctr] = (arg + args[ctr+1]).replace('\\', ' ');
+                    args[ctr] = (arg + args[ctr+1]).replace(WS_SYMBOL, ' ');
                     args.splice(ctr+1, 1);
                 }
             }
