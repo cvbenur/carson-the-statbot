@@ -1,4 +1,5 @@
 const { MessageEmbed } = require('discord.js');
+const { EMBED_COLOR } = require('../../../config.json');
 
 module.exports = {
     name: "help",
@@ -8,7 +9,7 @@ module.exports = {
         msg.channel.send(
             new MessageEmbed()
             .setTitle('Carson the StatBot')
-            .setColor("#FFFFFF")
+            .setColor(EMBED_COLOR)
             .setDescription('Carson is an easy to use - although VERY sassy - statistics compiling bot for your Discord server.\n\nHe can pretty much tell you anything you might want to know, with pretty, easy-to-read little graphs.')
             .addFields(
                 // TODO: Link 'help' to a web page
