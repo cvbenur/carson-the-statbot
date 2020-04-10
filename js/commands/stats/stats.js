@@ -4,7 +4,10 @@ const moment = require('moment');
 
 
 
+// Returning a channel object from a name
 function getChannelFromName (msg, name) {
+    if (name === 'all') return 'global';
+
     const found = msg.member.guild.channels.cache.find(channel => channel.name.includes(name.toLowerCase()));
 
     if (!(found instanceof TextChannel)) {
@@ -15,14 +18,18 @@ function getChannelFromName (msg, name) {
     return found === undefined ? -1 : found;
 }
 
-
+// Returning a member object from a name
 async function getPlayerFromName (msg, name) {
+    if (name === 'all') return 'global';
+
     let found = (await msg.guild.members.fetch({ query: name, limit: 1 })).entries().next().value[1];
-    return found;
+    return found === undefined ? -1 : found;
 }
 
-
+// Returning a moment
 function getTimeFromArg (arg) {
+    if (arg === 'all') return 'global';
+
     const now = new moment();
 
     if (isNaN(arg)) return -1;
@@ -34,6 +41,95 @@ function getTimeFromArg (arg) {
     return now.subtract(weeks, 'weeks');
 }
 
+// Sending back a message
+function sendBackStats (msg, line) {
+    let sendback='**Your query:**\n';
+
+    if (line.chan != '') {
+        if (line.chan === 'global') sendback += 'Channel(s) : all.\n';
+        else sendback += `Channel(s) : ${line.chan}\n`;
+    }
+
+    if (line.member != '') {
+        if (line.member === 'global') sendback += 'Player(s) : all.\n';
+        else sendback += `Player : ${line.member.toString()}\n`;
+    }
+
+    if (line.time != '') {
+        if (line.time === 'global') sendback += 'Time : none specified.\n';
+        else sendback += `Time : \"${line.time}\".\n`;
+    }
+
+    msg.channel.send(answerify(sendback));
+}
+
+// Parsing arguments to 'stats' command
+async function parseArgs(msg, args) {
+
+    return new Promise((resolve, reject) => {
+
+        let hasGlobal = false;
+        let hasChannel = false;
+        let hasPlayer = false;
+        let hasTime = false;
+
+        let line = {
+            chan: '',
+            member: '',
+            time: ''
+        };
+
+        let ctr=0;
+
+        args.forEach(async arg => {
+
+            if (args.length === 1 && arg.trim() === 'all') {
+                line.chan = 'global';
+                line.member = 'global';
+                line.time = 'global';
+            } else if (arg.trim().startsWith('c:')) {
+    
+                hasChannel = true;
+                const channel = getChannelFromName(msg, arg.split('c:')[1]);
+    
+                if (channel === -1) reject(`Error : channel \"${arg.split('c:')}\"not found.`);
+    
+                console.log(`Channel detected : \"${channel.name}\"`);
+                line.chan = channel;
+    
+            } else if (arg.trim().startsWith('p:')) {
+    
+                hasPlayer = true;
+                const player = await getPlayerFromName(msg, arg.split('p:')[1]);
+    
+                if (player === -1) reject(`Error : player ${arg.split('p:')} not found.`);
+    
+                console.log(`Player detected : \"${player.displayName}\"`);
+                line.member = player;
+    
+            } else if (arg.trim().startsWith('t:')) {
+    
+                hasTime = true;
+                const date = getTimeFromArg(arg.split('t:')[1]);
+    
+                if (!(date instanceof moment)) reject('Wrong argument for time.');
+    
+                console.log(`Time detected : \"${date}\".`);
+                line.time = date;
+    
+            } else reject(`Error with argument : \"${arg}\"`);
+
+
+            if (++ctr == args.length) resolve(line);
+        });
+
+        if (hasChannel && hasGlobal) {
+            reject(`Error : channel && global.`);
+        }
+    })
+
+}
+
 
 
 
@@ -43,11 +139,6 @@ module.exports = {
     category: "Stat",
     description: "Compiles and sends back stats.",
     execute: async (msg, args) => {
-
-        let hasGlobal = false;
-        let hasChannel = false;
-        let hasPlayer = false;
-        let hasTime = false;
 
 
         if (args.length === 0) {
@@ -103,77 +194,13 @@ module.exports = {
 
             return;
         }
+        
+        
 
-
-        args.forEach(async arg => {
-
-            if (arg.trim().startsWith('c:')) {
-
-                hasChannel = true;
-                const channel = getChannelFromName(msg, arg.split('c:')[1]);
-
-                if (channel === -1) {
-                    console.log('Error : channel not found.');
-                    return;
-                }
-
-                console.log(`Channel detected : \"${channel.name}\"`);
-
-            } else if (arg.trim().startsWith('p:')) {
-
-                hasPlayer = true;
-                const player = await getPlayerFromName(msg, arg.split('p:')[1]);
-
-                if (player === undefined) {
-                    console.log('Error : player not found.');
-                    return;
-                }
-
-                console.log(`Player detected : \"${player.displayName}\"`);
-
-            } else if (arg.trim().startsWith('t:')) {
-
-                hasTime = true;
-                const date = getTimeFromArg(arg.split('t:')[1]);
-
-                if (!(date instanceof moment)) {
-
-                    switch (date) {
-
-                        case -1:
-                            console.log('Error : time is not a number.');
-                            break;
-
-                        case -2:
-                            console.log('Error : time is not an integer.');
-                            break;
-
-                        case -3:
-                            console.log('Error : time is inferior to 1.');
-                            break;
-                    }
-
-                    return;
-                }
-
-                console.log(`Time detected : \"${date}\"`);
-
-            } else if (arg.trim() === 'global') {
-
-                hasGlobal = true;
-                console.log('Global detected');
-
-            } else {
-
-                console.log(`Error with argument : \"${arg}\"`);
-                return;
-
-            }
-        });
-
-        if (hasChannel && hasGlobal) {
-            console.log(`Error : channel && global.`);
-            return;
+        try {
+            sendBackStats(msg, await parseArgs(msg, args));
+        } catch (error) {
+            console.log(error);
         }
     }
 };
