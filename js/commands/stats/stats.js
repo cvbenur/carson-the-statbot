@@ -4,23 +4,25 @@ const moment = require('moment');
 
 
 
-function getChannelFromName(msg, name) {
+function getChannelFromName (msg, name) {
     const found = msg.member.guild.channels.cache.find(channel => channel.name.includes(name.toLowerCase()));
 
-    if (found === undefined) return -1;
-    return found;
+    if (!(found instanceof TextChannel)) {
+        console.log('Error : not a text channel.');
+        return -1;
+    }
+
+    return found === undefined ? -1 : found;
 }
 
 
-function getPlayerFromName(msg, name) {
-    const found = msg.guild.members.fetch(player => player.name.toLowerCase().includes(name.toLowerCase()));
-
-    if (found.id === undefined) return -1;
-    return found;
+async function getPlayerFromName (msg, name) {
+    let found = (await msg.guild.members.fetch({ query: name, limit: 1 })).entries().next().value[1];
+    return found === undefined ? -1 : found;
 }
 
 
-function getTimeFromArg(arg) {
+function getTimeFromArg (arg) {
     const now = new moment();
 
     if (isNaN(arg)) return -1;
@@ -103,7 +105,7 @@ module.exports = {
         }
 
 
-        args.forEach(arg => {
+        args.forEach(async arg => {
 
             if (arg.trim().startsWith('c:')) {
 
@@ -115,17 +117,19 @@ module.exports = {
                     return;
                 }
 
+                console.log(`Channel detected : ${channel.name}`);
+
             } else if (arg.trim().startsWith('p:')) {
 
                 hasPlayer = true;
-                const player = getPlayerFromName(msg, arg.split('p:')[1]);
+                const player = await getPlayerFromName(msg, arg.split('p:')[1]);
 
                 if (player === -1) {
                     console.log('Error : player not found.');
                     return;
                 }
 
-                console.log(`Player detected : ${player.name}`);
+                console.log(`Player detected : ${player.displayName}`);
 
             } else if (arg.trim().startsWith('t:')) {
 
@@ -151,6 +155,8 @@ module.exports = {
 
                     return;
                 }
+
+                console.log(`Time detected : ${date}`);
 
             } else if (arg.trim() === 'global') {
 
