@@ -1,5 +1,5 @@
 const { answerify } = require('../../utilities.js');
-const { MessageEmbed, TextChannel } = require('discord.js');
+const { MessageEmbed, TextChannel, GuildMember } = require('discord.js');
 const { EMBED_COLOR } = require('../../../config.json');
 const moment = require('moment');
 
@@ -7,7 +7,7 @@ const moment = require('moment');
 
 // Returning a channel object from a name
 function getChannelFromName (msg, name) {
-    if (name === 'all') return 'global';
+    if (name === 'all') return 'all';
 
     const found = msg.member.guild.channels.cache.find(channel => channel.name.includes(name.toLowerCase()));
 
@@ -21,7 +21,7 @@ function getChannelFromName (msg, name) {
 
 // Returning a member object from a name
 async function getPlayerFromName (msg, name) {
-    if (name === 'all') return 'global';
+    if (name === 'all') return 'all';
 
     let found = (await msg.guild.members.fetch({ query: name, limit: 1 })).entries().next().value[1];
     return found === undefined ? -1 : found;
@@ -84,7 +84,7 @@ async function parseArgs(msg, args) {
 
         args.forEach(async arg => {
 
-            if (args.length === 1 && arg.trim() === 'all') {
+            if (arg.trim() === 'all') {
                 if (++nbrAll > 1) reject('Error : Too many `all` arguments.');
 
                 line.chan = 'all';
@@ -92,33 +92,33 @@ async function parseArgs(msg, args) {
                 line.time = 'all';
             } else if (arg.trim().startsWith('c:')) {
     
-                if (++nbrChannel > 1) reject('Error : Too many channels (\'`c:`\') arguments.');
+                if (++nbrChannel > 1) reject('Error : Too many `c:` arguments.');
 
                 const channel = getChannelFromName(msg, arg.split('c:')[1]);
     
-                if (channel === -1) reject(`Error : channel \"${arg.split('c:')}\"not found.`);
+                if (channel === -1) reject(`Sorry, I couldn't find channel \`${arg.split('c:')[1]}\`.\n\nDid you check the spelling?`);
     
                 console.log(`Channel detected : \"${channel.name}\"`);
                 line.chan = channel;
     
             } else if (arg.trim().startsWith('p:')) {
     
-                if (++nbrPlayer > 1) reject('Error : Too many player (\'`p:`\') arguments.');
+                if (++nbrPlayer > 1) reject('Error : Too many `p:` arguments.');
 
                 const player = await getPlayerFromName(msg, arg.split('p:')[1]);
     
-                if (player === -1) reject(`Error : player ${arg.split('p:')} not found.`);
+                if (player === undefined) reject(`Sorry, I couldn't find player \`${arg.split('p:')[1]}\`.\n\nDid you check the spelling?`);
     
                 console.log(`Player detected : \"${player.displayName}\"`);
                 line.member = player;
     
             } else if (arg.trim().startsWith('t:')) {
     
-                if (++nbrTime > 1) reject('Error : Too many time (\'`t:`\') arguments.');
+                if (++nbrTime > 1) reject('I din\'t quite catch that... There were too many `t:` arguments.');
 
                 const date = getTimeFromArg(arg.split('t:')[1]);
     
-                if (!(date instanceof moment)) reject('Wrong argument for time.');
+                if (!(date instanceof moment)) reject(`Sorry, \`${arg.split('t:')[1]}\` isn't a valid number of weeks.`);
     
                 console.log(`Time detected : \"${date}\".`);
                 line.time = date;
@@ -128,8 +128,6 @@ async function parseArgs(msg, args) {
 
             if (++ctr == args.length) resolve(line);
         });
-
-        
     })
 
 }
@@ -204,7 +202,7 @@ module.exports = {
         try {
             sendBackStats(msg, await parseArgs(msg, args));
         } catch (error) {
-            console.log(error);
+            msg.reply(answerify(error));
         }
     }
 };
