@@ -107,6 +107,7 @@ async function parseArgs(msg, args) {
 
                 const player = await getPlayerFromName(msg, arg.split('p:')[1]);
     
+                // TODO: catch errors
                 if (player === undefined) reject(`Sorry, I couldn't find player \`${arg.split('p:')[1]}\`.\n\nDid you check the spelling?`);
     
                 console.log(`Player detected : \"${player.displayName}\"`);
