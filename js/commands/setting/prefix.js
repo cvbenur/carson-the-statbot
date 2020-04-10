@@ -4,19 +4,19 @@ const { DEFAULT_PREFIX } = require('../../../config.json');
 
 
 // Changing the prefix for this server
-function setPrefix(id, newPref) {
+function setPrefix (id, newPref) {
 
     let prefixes = JSON.parse(readFileSync("./prefixes.json", "utf8"));
 
     prefixes[id] = {
-        prefix: newPref
+        prefix: newPref + ' '
     };
 
     writeFileSync("./prefixes.json", JSON.stringify(prefixes), (err) => {
         if (err) console.log(err);
     });
 
-    PREFIX = newPref;
+    PREFIX = newPref + ' ';
 }
 
 
@@ -33,11 +33,11 @@ module.exports = {
             case 0:
 
                 // Reseting the prefix
-                setPrefix(msg.guild, DEFAULT_PREFIX);
-                console.log('>>Prefix set to default prefix : \'' + PREFIX + '\'.');
+                setPrefix(msg.guild.id, DEFAULT_PREFIX);
+                console.log('>>Prefix set to default prefix : \'' + PREFIX.trim() + '\'.');
 
                 msg.channel.send(
-                    Util.answerify('Resetting my prefix to \'`' + PREFIX + '`\'.\nI\'ll only answer to this now. Don\'t even try.')
+                    Util.answerify('Resetting my prefix to \'`' + PREFIX.trim() + '`\'.\nI\'ll only answer to this now. Don\'t even try.')
                 );
                 break;
 
@@ -55,14 +55,18 @@ module.exports = {
                 } else {
 
                     // Setting the prefix to the new phrase
-                    setPrefix(msg.guild, args[0]);
-                    console.log('>>Prefix set to : \'' + PREFIX + '\'.');
+                    setPrefix(msg.guild.id, args[0]);
+                    console.log('>>Prefix set to : \'' + PREFIX.trim() + '\'.');
 
                     msg.channel.send(
-                        Util.answerify('Gotcha ! I will now only answer to `' + PREFIX +'`.\nForget eeeeverything else...\n**\*Stares into the distance\***')
+                        Util.answerify('Gotcha ! I will now only answer to `' + PREFIX.trim() +'`.\nForget eeeeverything else...\n**\*Stares into the distance\***')
                     );
                 }
                 break;
         }
-    }
+    },
+
+
+
+    setPrefix
 };

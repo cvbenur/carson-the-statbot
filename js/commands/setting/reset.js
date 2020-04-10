@@ -1,23 +1,8 @@
-const { DEFAULT_PREFIX } = require('../../../config.json');
-const Util = require('../../utilities.js')
-const { readFileSync, writeFileSync } = require('fs');
+const { answerify } = require('../../utilities.js')
+const { setPrefix } = require('./prefix.js');
+const { setWhitespaceSymbol } = require('./setspace.js');
+const { DEFAULT_PREFIX, DEFAULT_WS_SYMBOL } = require('../../../config.json');
 
-
-
-// Reseting prefix to default
-function resetPrefix (id) {
-    let prefixes = JSON.parse(readFileSync("./prefixes.json", "utf8"));
-        
-    prefixes[id] = {
-        prefix: DEFAULT_PREFIX
-    };
-
-    writeFileSync("./prefixes.json", JSON.stringify(prefixes), (err) => {
-        if (err) console.log(err);
-    });
-
-    PREFIX = DEFAULT_PREFIX;
-}
 
 
 
@@ -27,8 +12,9 @@ module.exports = {
     description: "Resets Carson's configuration to default.",
     execute: async (msg) => {
 
-        resetPrefix(msg.member.guild.id);
+        setPrefix(msg.member.guild.id, DEFAULT_PREFIX);
+        setWhitespaceSymbol(msg.member.guild.id, DEFAULT_WS_SYMBOL);
         
-        msg.channel.send(Util.answerify("Reset Carson's settings to default."));
+        msg.channel.send(answerify("**Reset Carson's settings to default.**\nPrefix : `" + DEFAULT_PREFIX.trim() + "`\nWhitespace identifier : `" + DEFAULT_WS_SYMBOL + "`"));
     }
 };

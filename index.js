@@ -1,6 +1,6 @@
 const { Client, Collection } = require('discord.js');
-const { DEFAULT_PERMS, DEFAULT_PREFIX } = require('./config.json');
-const Util = require('./js/utilities.js');
+const { DEFAULT_PERMS, DEFAULT_PREFIX, DEFAULT_WS_SYMBOL } = require('./config.json');
+const { answerify, logMessage, permCheck, removeWhitespaceFromArray } = require('./js/utilities.js');
 const { config } = require('dotenv');
 const { readFileSync } = require('fs');
 
@@ -48,27 +48,39 @@ bot.on('message', async message => {
 
     // If the message is a Direct Message
     if (message.channel.type === "dm") {
-        message.author.send(Util.answerify("Sorry, I only respond in servers !"));
+        message.author.send(answerify("Sorry, I only respond in servers !"));
         return;
     }
 
 
 
     let prefixes = JSON.parse(readFileSync("./prefixes.json", "utf8"));
-
     if (!prefixes[message.guild.id]) {
         prefixes[message.guild.id] = {
             prefix: DEFAULT_PREFIX
         };
     }
-
     PREFIX = prefixes[message.guild.id].prefix;
+
+
+
+
+    let ws = JSON.parse(readFileSync("./ws-symbols.json", "utf8"));
+    if (!ws[message.guild.id]) {
+        ws[message.guild.id] = {
+            ws: DEFAULT_WS_SYMBOL
+        };
+    }
+    WS_SYMBOL = ws[message.guild.id].symbol;
+
+
+
 
 
     const perms = PLAYER_PERMS;
 
     // Logging the message in the console
-    Util.logMessage(message);
+    logMessage(message);
 
 
 
@@ -79,7 +91,7 @@ bot.on('message', async message => {
 
     // Decomposing the message into arguments
     var args = message.content.slice(PREFIX.length).trim().split(/ +/g);
-    args = Util.removeWhitespaceFromArray(args);
+    args = removeWhitespaceFromArray(args);
     
     // Converting the arguments to a command
     var cmd = args.shift().toLowerCase();
@@ -98,25 +110,11 @@ bot.on('message', async message => {
     switch(cmd) {
 
         // Detected 'help'
-        case 'start':
-
-            if (Util.permCheck(cmd, message.member.guild.me, perms)) {
-                console.log(">>Executing 'help' command.");
-                command.execute(message);
-            } else {
-                message.channel.send(Util.permDenied(perms));
-            }
-            break;
-
-
-        // Detected 'help'
         case 'help':
 
-            if (Util.permCheck(cmd, message.member.guild.me, perms)) {
+            if (permCheck(cmd, message, perms)) {
                 console.log(">>Executing 'help' command.");
                 command.execute(message);
-            } else {
-                message.channel.send(Util.permDenied(perms));
             }
             break;
         
@@ -124,11 +122,9 @@ bot.on('message', async message => {
         // Detected 'ping'
         case 'ping':
 
-            if (Util.permCheck(cmd, message.member.guild.me, perms)) {
+            if (permCheck(cmd, message, perms)) {
                 console.log(">>Executing 'ping' command.");
                 command.execute(message);
-            } else {
-                message.channel.send(Util.permDenied(perms));
             }
             break;
         
@@ -136,11 +132,9 @@ bot.on('message', async message => {
         // Detected 'prefix'
         case 'prefix':
             
-            if (Util.permCheck(cmd, message.member.guild.me, perms)) {
+            if (permCheck(cmd, message, perms)) {
                 console.log(">>Executing 'prefix' command.");
                 command.execute(message, args);
-            } else {
-                message.channel.send(Util.permDenied(perms));
             }
             break;
 
@@ -148,11 +142,19 @@ bot.on('message', async message => {
         // Detected 'reset'
         case 'reset':
 
-            if (Util.permCheck(cmd, message.member.guild.me, perms)) {
+            if (permCheck(cmd, message, perms)) {
                 console.log(">>Executing 'reset' command.");
                 command.execute(message);
-            } else {
-                message.channel.send(Util.permDenied(perms));
+            }
+            break;
+
+
+        // Detected 'setspace'
+        case 'setspace':
+
+            if(permCheck(cmd, message, perms)) {
+                console.log(">>Executing 'setspace' command.");
+                command.execute(message, args);
             }
             break;
 
@@ -160,11 +162,19 @@ bot.on('message', async message => {
         // Detected 'stats'
         case 'stats':
 
-            if (Util.permCheck(cmd, message.member.guild.me, perms)) {
+            if (permCheck(cmd, message, perms)) {
                 console.log(">>Executing 'stats' command.");
                 command.execute(message, args);
-            } else {
-                message.channel.send(Util.permDenied(perms));
+            }
+            break;
+
+
+        // Detected 'help'
+        case 'start':
+
+            if (permCheck(cmd, message, perms)) {
+                console.log(">>Executing 'help' command.");
+                command.execute(message);
             }
             break;
     }
