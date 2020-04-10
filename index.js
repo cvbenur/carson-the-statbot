@@ -78,7 +78,10 @@ bot.on('message', async message => {
 
 
     // Decomposing the message into arguments
-    const args = message.content.slice(PREFIX.length).trim().split(/ +/g);
+    var args = message.content.slice(PREFIX.length).trim().split(/ +/g);
+    args = Util.removeWhitespaceFromArray(args);
+    
+    // Converting the arguments to a command
     var cmd = args.shift().toLowerCase();
 
     
