@@ -19,6 +19,35 @@ function getChannelFromName (msg, name) {
     return found === undefined ? -1 : found;
 }
 
+// Returning the messages in a given channel
+async function getMessagesFromChannel (channel, limit = 100) {
+
+    let fetchedMessages = [];
+    let last_id;
+
+    console.log(channel.name);
+
+    while (true) {
+        const options = { limit: 100 };
+        if (last_id) {
+            options.before = last_id;
+        }
+
+        if (channel != undefined) {
+            const messages = await channel.messages.fetch(options);
+        
+            fetchedMessages.push(...messages.array());
+            last_id = messages.last().id;
+
+            if (messages.size != 100 || fetchedMessages >= limit) {
+                break;
+            }
+        }
+    }
+
+    return fetchedMessages;
+}
+
 // Returning a member object from a name
 async function getPlayerFromName (msg, name) {
     if (name === 'all') return 'all';
@@ -40,28 +69,6 @@ function getTimeFromArg (arg) {
     if (weeks < 1) return -3;
 
     return now.subtract(weeks, 'weeks');
-}
-
-// Sending back a message
-function sendBackStats (msg, line) {
-    let sendback='**Your query:**\n';
-
-    if (line.chan != '') {
-        if (line.chan === 'all') sendback += 'Channel(s) : all.\n';
-        else sendback += `Channel(s) : ${line.chan}\n`;
-    }
-
-    if (line.member != '') {
-        if (line.member === 'all') sendback += 'Player(s) : all.\n';
-        else sendback += `Player : ${line.member.toString()}\n`;
-    }
-
-    if (line.time != '') {
-        if (line.time === 'all') sendback += 'Time : none specified.\n';
-        else sendback += `Time : \"${line.time}\".\n`;
-    }
-
-    msg.reply(answerify(sendback));
 }
 
 // Parsing arguments to 'stats' command
@@ -133,6 +140,43 @@ async function parseArgs(msg, args) {
 
 }
 
+// Sending back a message
+async function sendBackStats (msg, line) {
+
+    let sendback='**Your query:**\n';
+    let fetchedMessages = [];
+
+    if (line.chan != '') {
+        if (line.chan === 'all') {
+            sendback += 'Channel(s) : all.\n';
+
+            for (let channel of msg.guild.channels.cache) {
+                if (channel[1] instanceof TextChannel) {
+                    let current = await getMessagesFromChannel(channel[1]);
+                    fetchedMessages = fetchedMessages.concat(current);
+                }
+            }
+        } else {
+            sendback += `Channel(s) : ${line.chan}\n`;
+
+            fetchedMessages = await getMessagesFromChannel(line.chan);
+        }
+    }
+
+    if (line.member != '') {
+        if (line.member === 'all') sendback += 'Player(s) : all.\n';
+        else sendback += `Player : ${line.member.toString()}\n`;
+    }
+
+    if (line.time != '') {
+        if (line.time === 'all') sendback += 'Time : none specified.\n';
+        else sendback += `Time : \"${line.time}\".\n`;
+    }
+
+    console.log(fetchedMessages.length);
+
+    msg.reply(answerify(sendback));
+}
 
 
 
