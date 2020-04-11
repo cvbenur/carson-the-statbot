@@ -54,6 +54,7 @@ bot.on('message', async message => {
 
 
 
+    // Getting this server's prefix, if there isn't one, set it to DEFAULT_PREFIX
     let prefixes = JSON.parse(readFileSync("./prefixes.json", "utf8"));
     if (!prefixes[message.guild.id]) {
         prefixes[message.guild.id] = {
@@ -64,7 +65,7 @@ bot.on('message', async message => {
 
 
 
-
+    // Getting this server's whitespace identifier, if there isn't one, set it to DEFAULT_WS_SYMBOL
     let ws = JSON.parse(readFileSync("./ws-symbols.json", "utf8"));
     if (!ws[message.guild.id]) {
         ws[message.guild.id] = {
@@ -76,8 +77,9 @@ bot.on('message', async message => {
 
 
 
-
+    // Setting the permissions to look from
     const perms = PLAYER_PERMS;
+
 
     // Logging the message in the console
     logMessage(message);
@@ -182,5 +184,5 @@ bot.on('message', async message => {
 
 
 
-// Getting bot's token
+// Login in the bot with the TOKEN
 bot.login(process.env.TOKEN);
