@@ -19,6 +19,32 @@ function getChannelFromName (msg, name) {
     return found === undefined ? -1 : found;
 }
 
+// Returning the messages in a given channel
+async function getMessagesFromChannel (channel, limit = 100) {
+
+    let fetchedMessages = [];
+    let last_id;
+
+    while (true) {
+        const options = { limit: 100 };
+        if (last_id) {
+            options.before = last_id;
+        }
+
+        const messages = await channel.messages.fetch(options);
+        fetchedMessages.push(...messages.array());
+        last_id = messages.last().id;
+
+        if (messages.size != 100 || fetchedMessages >= limit) {
+            break;
+        }
+    }
+
+    console.log(fetchedMessages[0].content);
+    return fetchedMessages;
+}
+
+
 // Returning a member object from a name
 async function getPlayerFromName (msg, name) {
     if (name === 'all') return 'all';
@@ -43,12 +69,18 @@ function getTimeFromArg (arg) {
 }
 
 // Sending back a message
-function sendBackStats (msg, line) {
+async function sendBackStats (msg, line) {
     let sendback='**Your query:**\n';
 
     if (line.chan != '') {
         if (line.chan === 'all') sendback += 'Channel(s) : all.\n';
-        else sendback += `Channel(s) : ${line.chan}\n`;
+        else {
+            sendback += `Channel(s) : ${line.chan}\n`;
+            
+            const messages = await getMessagesFromChannel(line.chan);
+
+            console.log(messages.length);
+        }
     }
 
     if (line.member != '') {
