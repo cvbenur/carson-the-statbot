@@ -173,7 +173,7 @@ async function parseArgs(msg, args) {
 }
 
 // Sending back a message
-async function computeThemStats (msg, line) {
+async function processParameters (msg, line) {
 
     let sendback='**Your query:**\n';
     let fetchedMessages = [];
@@ -218,7 +218,7 @@ async function computeThemStats (msg, line) {
 
     // If a 't:' argument was given
     if (line.time != '') {
-        
+
         // If the given argument was 'all'
         if (line.time === 'all') sendback += 'Time : none specified.\n';
         // Else
@@ -298,7 +298,7 @@ module.exports = {
         
         // Actually get the stats on the args
         try {
-            computeThemStats(msg, await parseArgs(msg, args));
+            processParameters(msg, await parseArgs(msg, args));
         } catch (error) {
 
             // In case of an error, report it
