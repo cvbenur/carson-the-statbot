@@ -90,7 +90,7 @@ module.exports = {
         } else {
 
             // Displaying detected message
-            console.log('MSG FROM : ' + msgAuthor + ' -> ' + msg.content);
+            console.log('SERVER: ' + msg.guild.name + ', Author: ' + msgAuthor + ' -> ' + msg.content);
         }
     },
 
