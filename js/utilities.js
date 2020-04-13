@@ -125,16 +125,19 @@ module.exports = {
 
 
     // Removing whitespaces from array after '\' indicator
-    removeWhitespaceFromArray: (args) => {
+    removeWhitespaceFromArray: (args, WS_SYMBOL) => {
 
         var ctr=0;
 
         for (let arg of args) {
-            
-            if (arg.endsWith(WS_SYMBOL)) {
-                if (args[ctr+1] && (!args[ctr+1].startsWith('c:') && !args[ctr+1].startsWith('t:'))) {
-                    args[ctr] = (arg + args[ctr+1]).replace(WS_SYMBOL, ' ');
-                    args.splice(ctr+1, 1);
+
+            if ((args[ctr+1] != undefined) && (!args[ctr+1].startsWith('c:') && !args[ctr+1].startsWith('t:') && !args[ctr+1].startsWith('w:') && !args[ctr+1].startsWith('p:'))) {
+                
+                if (arg.endsWith(WS_SYMBOL)) {
+                    if (condition) {
+                        args[ctr] = (arg + args[ctr+1]).replace(WS_SYMBOL, ' ');
+                        args.splice(ctr+1, 1);
+                    }
                 }
             }
 
