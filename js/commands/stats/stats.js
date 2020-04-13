@@ -394,45 +394,48 @@ function compileThemStats (msg, search) {
         let i=0;
         for (i=0; i<messages.length; i++) {
 
-            let createMoment = moment(messages[i].createdAt);
+            if (messages[i].content != "") {
 
-            let editMoment;
-            if (messages[i].editedAt === null) editMoment = createMoment;
-            else editMoment = moment(messages[i].editedAt);
+                let createMoment = moment(messages[i].createdAt);
 
-            //const condition = (editMoment.isAfter(memberStat.joinGuildOn) || (messages[i].edits.length > 1 && editMoment.isAfter(memberStat.joinGuildOn))) && (createMoment.isAfter(maxDate) || moment(messages[i].editedAt).isAfter(maxDate));
+                let editMoment;
+                if (messages[i].editedAt === null) editMoment = createMoment;
+                else editMoment = moment(messages[i].editedAt);
 
-            // If the message was created (or last edited) within the specified date parameters
-            if (memberStat.joinGuildOn.isBefore(createMoment) && (createMoment.isAfter(maxDate) || editMoment.isAfter(maxDate))) {
+                //const condition = (editMoment.isAfter(memberStat.joinGuildOn) || (messages[i].edits.length > 1 && editMoment.isAfter(memberStat.joinGuildOn))) && (createMoment.isAfter(maxDate) || moment(messages[i].editedAt).isAfter(maxDate));
 
-                // If this message has NOT already been parsed, parse it
-                if (!(messageAlreadyParsed.some(m => {return m === messages[i]}))) {
+                // If the message was created (or last edited) within the specified date parameters
+                if (memberStat.joinGuildOn.isBefore(createMoment) && (createMoment.isAfter(maxDate) || editMoment.isAfter(maxDate))) {
 
-                    // Put it in the 'already parsed' array in order not to parse it twice
-                    messageAlreadyParsed.push(messages[i]);
+                    // If this message has NOT already been parsed, parse it
+                    if (!(messageAlreadyParsed.some(m => {return m === messages[i]}))) {
 
-
-
-                    // If this channel hasn't already been parsed once, add it to the array
-                    if (!(memberStatsArray.channels.some(c => {return c === messages[i].channel}))) memberStatsArray.channels.push(messages[i].channel);
+                        // Put it in the 'already parsed' array in order not to parse it twice
+                        messageAlreadyParsed.push(messages[i]);
 
 
 
-                    // If this member wrote this message
-                    if (messages[i].author === memberStat.member.user && messages[i].type != 'GUILD_MEMBER_JOIN') {
+                        // If this channel hasn't already been parsed once, add it to the array
+                        if (!(memberStatsArray.channels.some(c => {return c === messages[i].channel}))) memberStatsArray.channels.push(messages[i].channel);
 
-                        // Increment msgCtr for this user
-                        memberStat.msgCtr++;
 
-                        if (word != undefined) {
-                            // If the message contains the phrase, increment wordCtr by the number. Else, keep it 0
-                            memberStat.wordCtr += occurrences(messages[i].content, word, false);
+
+                        // If this member wrote this message
+                        if (messages[i].author === memberStat.member.user) {
+
+                            // Increment msgCtr for this user
+                            memberStat.msgCtr++;
+
+                            if (word != undefined) {
+                                // If the message contains the phrase, increment wordCtr by the number. Else, keep it 0
+                                memberStat.wordCtr += occurrences(messages[i].content, word, false);
+                            }
                         }
-                    }
 
-                } // Else, message has already been parsed, ignore the message
+                    } // Else, message has already been parsed, ignore the message
 
-            } else i = messages.length; // Else, messages are too old, stop the search
+                } else i = messages.length; // Else, messages are too old, stop the search
+            }   // Else, ignore message
         }
 
 
