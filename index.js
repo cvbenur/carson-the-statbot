@@ -93,7 +93,8 @@ bot.on('message', async message => {
 
     // Decomposing the message into arguments
     var args = message.content.slice(PREFIX.length).trim().split(/ +/g);
-    args = removeWhitespaceFromArray(args);
+    args = removeWhitespaceFromArray(args, WS_SYMBOL);
+    
     
     // Converting the arguments to a command
     var cmd = args.shift().toLowerCase();
@@ -186,3 +187,8 @@ bot.on('message', async message => {
 
 // Login in the bot with the TOKEN
 bot.login(process.env.TOKEN);
+
+
+module.exports = {
+    BOT: bot,
+};
