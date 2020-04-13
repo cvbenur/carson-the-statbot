@@ -342,7 +342,6 @@ function occurrences (string, subString, allowOverlapping) {
         } else break;
     }
 
-
     return n;
 }
 
@@ -560,47 +559,43 @@ module.exports = {
 
         // If the only argument after 'stats' is 'help'
         if (args[0] === 'help') {
-            msg.channel.send(
+            msg.reply(
                 new MessageEmbed()
                     .setTitle('Carson says')
                     .setColor(EMBED_COLOR)
-                    .setDescription('Here is a list of heywords to use with `' + PREFIX + ' stats`.')
+                    .setDescription('Here is a list of heywords to use with `' + PREFIX.trim() + ' stats`.')
                     .addFields(
                     {
                         name: "**- `help`**",
                         value: "This very command. Pretty self-explanatory."
                     },
                     {
-                        name: "**- `global` (optional)**",
-                        value: "All stats, for the whole server. ALL. OF. IT.\n:warning: Can\'t be used with `c:<channel>.`"
-                    },
-                    {
                         name: "**- `c:<channel>` (optional)**",
-                        value: "All stats for the given channel.\n:warning: Can\'t be used with `global`."
+                        value: "All stats for the given channel.\nFor all channels, either don't specify any, or just type **`c:all`**."
                     },
                     {
                         name: "**- `p:<player>` (optional)**",
-                        value: "All stats for a given player."
+                        value: "All stats for a given player.\nFor all players, either don't specify any, or just type **`p:all`**."
                     },
                     {
                         name: "**- `t:<number>` (optional)**",
-                        value: "Number of weeks from now to restrict the search to."
+                        value: "Number of weeks ago to restrict the search to.\nFor all time, either don't specify any, or just type **`t:all`**."
                     },
                     {
                         name: "**- `w:<word>` (optional)**",
-                        value: "Counts the occurences of the word <word>.\nIn order to search for a phrase, replace spaces by `'\\ '`."
+                        value: "Counts the occurences of the word <word>.\nIn order to search for a phrase, replace spaces by **`" + WS_SYMBOL + " `**.\nExample below."
                     },
                     {
-                        name: "**A few combinations :**",
-                        value: "You can combine almost all of them together, except for `global` and `c:<channel>`. These do not go well together.\nHere are some examples."
+                        name: "**A few examples :**",
+                        value: "You can combine almost all of them together.\nHere are some examples."
                     },
                     {
-                        name: "- `" + PREFIX + " stats global p:Yeetus t:3`",
-                        value:  "This command will give you the stats for player 'Yeetus' over the last 3 weeks."
+                        name: "- `" + PREFIX.trim() + " stats c:all p:Yeetus t:3`",
+                        value:  "This command will give you the stats for player **`Yeetus`** over the last **`3`** weeks."
                     },
                     {
-                        name: "- `" + PREFIX + " stats w:lit\\ fam c:general`",
-                        value: "This command will give you the number of occurence of the phrase \'lit fam\' in the channel \'general\'."
+                        name: "- `" + PREFIX.trim() + " stats w:lit\\ fam c:general`",
+                        value: "This command will give you the number of occurence of the phrase **`lit fam`** in channel **`general`**."
                     })
             );
 
