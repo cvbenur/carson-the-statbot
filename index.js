@@ -69,7 +69,7 @@ bot.on('message', async message => {
     let ws = JSON.parse(readFileSync("./ws-symbols.json", "utf8"));
     if (!ws[message.guild.id]) {
         ws[message.guild.id] = {
-            ws: DEFAULT_WS_SYMBOL
+            symbol: DEFAULT_WS_SYMBOL
         };
     }
     WS_SYMBOL = ws[message.guild.id].symbol;
