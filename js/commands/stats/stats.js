@@ -467,9 +467,11 @@ function compileThemStats (msg, search) {
                 }
 
             }   // Else, message has already been parsed, ignore it
-        }
+
+        }   // Done parsing the messages
 
 
+        
         // Increment the total number of occurences found by the number found for this user
         memberStatsArray.nbrWrd += memberStat.wordCtr;
 
