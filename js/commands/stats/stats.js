@@ -349,6 +349,7 @@ function occurrences (message, phrase, allowOverlapping) {
 
 
 // FIXME: 80msg diff between fetched and parsed
+// FIXME: one player selected -> not all messages analyzed
 // Compiling basic stats
 function compileThemStats (msg, search) {
     
@@ -391,7 +392,6 @@ function compileThemStats (msg, search) {
             // The total time period over witch the messages are parsed
             joinGuildOn: moment(member.joinedAt)
         };
-
 
 
 
@@ -444,6 +444,15 @@ function compileThemStats (msg, search) {
 
                             // Put it in the 'already parsed' array in order not to parse it twice
                             messageAlreadyParsed.push(msg);
+
+                        } else {    // The current member is not the current message's author
+
+                            // If there is only one member to analyze
+                            if (members.length === 1) {
+
+                                // Put it in the 'already parsed' array in order not to parse it twice
+                                messageAlreadyParsed.push(msg);
+                            }
                         }
 
                     } else {
