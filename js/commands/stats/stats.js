@@ -1,5 +1,5 @@
 const { answerify } = require('../../utilities.js');
-const { MessageEmbed, TextChannel, GuildMember } = require('discord.js');
+const { MessageEmbed, TextChannel } = require('discord.js');
 const { EMBED_COLOR } = require('../../../config.json');
 const moment = require('moment');
 
@@ -74,14 +74,19 @@ async function getMessagesFromChannel (channel, limit = 100) {
 
 
 // Returning a member object from a name
-async function getPlayerFromName (msg, name) {
-    if (name === 'all') return 'all';
+function getPlayerFromName (msg, name) {
+    if (name.toLowerCase() === 'all') return 'all';
 
-    // Fetching the GuildMember object
-    let found = (await msg.guild.members.fetch({ query: name, limit: 1 })).entries().next().value[1];
+    let found = undefined;
 
-    // If the member is not undefined
-    return !(found instanceof GuildMember) ? -1 : found;
+    // Getting the guild member
+    found = msg.guild.members.cache.find(member => {
+        return member.displayName.toLowerCase().includes(name) ||
+        member.user.tag.toLowerCase().includes(name);
+    });
+
+    // If the member wasn't found
+    return found === undefined ? -1 : found;
 }
 
 
@@ -181,7 +186,7 @@ async function parseArgs(msg, args) {
                 if (++nbrPlayer > 1) reject('Error : Too many **`p:`** arguments.');
 
                 // Get the GuildMember object from the given name
-                const player = (await getPlayerFromName(msg, arg.split('p:')[1]));
+                const player = getPlayerFromName(msg, (arg.split('p:')[1]).toLowerCase());
     
 
                 // If this player wasn't found
@@ -191,8 +196,6 @@ async function parseArgs(msg, args) {
                 // Set the player search parameter to this player
                 console.log(`Player to look for : \"${player.displayName}\"`);
                 line.member = player;
-
-                console.log();
     
             } else if (arg.trim().startsWith('t:')) {   // If the argument is a 't:' argument
     
@@ -622,10 +625,11 @@ module.exports = {
         }
         
         
+        // Telling the user that the query is being processed
+        const reply = await msg.reply(answerify('Gotcha! This may take a while, please give me a moment :stopwatch:'));
+
         // Actually get the stats on the args
         try {
-            // Telling the user that the query is being processed
-            const reply = await msg.reply(answerify('Gotcha! This may take a while, please give me a moment :stopwatch:'));
 
             // Getting the compiled stats
             const computedStats = await processParameters(msg, await parseArgs(msg, args));
@@ -636,7 +640,7 @@ module.exports = {
         } catch (error) {
 
             // In case of an error, report it
-            msg.reply(answerify(error));
+            reply.edit(answerify(error));
         }
     }
 };
