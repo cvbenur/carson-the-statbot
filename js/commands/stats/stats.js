@@ -348,8 +348,7 @@ function occurrences (message, phrase, allowOverlapping) {
 }
 
 
-// FIXME: 80msg diff between fetched and parsed
-// FIXME: one player selected -> not all messages analyzed
+// FIXME: 80msg diff between fetched and parsed when specifying only word
 // Compiling basic stats
 function compileThemStats (msg, search) {
     
