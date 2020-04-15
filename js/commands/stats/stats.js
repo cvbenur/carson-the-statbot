@@ -345,7 +345,7 @@ function occurrences (message, phrase, allowOverlapping) {
 }
 
 
-// TODO
+// FIXME: 80msg diff between fetched and parsed
 // Compiling basic stats
 function compileThemStats (msg, search) {
     
