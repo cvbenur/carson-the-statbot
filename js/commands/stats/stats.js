@@ -323,25 +323,24 @@ async function processParameters (msg, line) {
 }
 
 
-// Compute number of occurences in string
-function occurrences (string, subString, allowOverlapping) {
 
-    string += "";
-    subString += "";
-    if (subString.length <= 0) return (string.length + 1);
+// Compute number of occurences in string
+function occurrences (message, phrase, allowOverlapping) {
+    message += "";
+    phrase += "";
+    if (phrase.length <= 0) return (message.length + 1);
 
     var n = 0,
         pos = 0,
-        step = allowOverlapping ? 1 : subString.length;
+        step = allowOverlapping ? 1 : phrase.length;
 
     while (true) {
-        pos = string.indexOf(subString, pos);
+        pos = message.indexOf(phrase, pos);
         if (pos >= 0) {
             ++n;
             pos += step;
         } else break;
     }
-
     return n;
 }
 
@@ -365,6 +364,7 @@ function compileThemStats (msg, search) {
         channels: new Array(),
         nbrMsg: 0,
         word: word,
+        nbrWrd: 0,
         time: search.date === 'all' ? 'all' : maxDate.format("dddd, MMM Do YYYY, HH:mm:ss A")
     };
 
@@ -395,6 +395,8 @@ function compileThemStats (msg, search) {
         // Parsing the messages
         for (msg of messages) {
 
+            let wordContained = 0;
+
 
             // If this channel hasn't already been parsed once, add it to the array
             if (!memberStatsArray.channels.some(c => c === msg.channel)) memberStatsArray.channels.push(msg.channel);
@@ -413,38 +415,52 @@ function compileThemStats (msg, search) {
             if (!(messageAlreadyParsed.some(m => m === msg))) {
 
 
-                // Put it in the 'already parsed' array in order not to parse it twice
-                messageAlreadyParsed.push(msg);
-
-
                 // If the message was created (or last edited) within the specified date parameters
-                if (memberStat.joinGuildOn.isBefore(createMoment) && (createMoment.isAfter(maxDate) || editMoment.isAfter(maxDate))) {
+                if (createMoment.isAfter(maxDate) || editMoment.isAfter(maxDate)) {
 
 
-                        
-                    // If the member is the author of this message
-                    if (msg.author === member.user) {
+                    // If the content of the message is not empty or if the message is not a pure embed
+                    if (msg.content != "") {
 
 
-                        // Increment msgCtr for this user
-                        memberStat.msgCtr++;
+                        // If the member is the author of this message
+                        if (msg.author === member.user) {
 
-                        
-                        // If the content of the message is not empty
-                        if (msg.content != "") {
+                            // Increment msgCtr for this user
+                            memberStat.msgCtr++;
 
 
                             if (word != undefined) {
-                                // If the message contains the phrase, increment wordCtr by the number. Else, keep it 0
-                                memberStat.wordCtr += occurrences(msg.content.toLowerCase(), word.toLowerCase(), false);
+
+                                // Find the number of occurences of the phrase in the message
+                                wordContained = occurrences(msg.content.toLowerCase(), word.toLowerCase(), false);
                             }
+
+                            // Increment wrdCtr by number found
+                            memberStat.wordCtr += wordContained;
+
+                            // Put it in the 'already parsed' array in order not to parse it twice
+                            messageAlreadyParsed.push(msg);
                         }
+
+                    } else {
+
+                        // Put it in the 'already parsed' array in order not to parse it twice
+                        messageAlreadyParsed.push(msg);
                     }
+
+                } else {
+
+                    // Put it in the 'already parsed' array in order not to parse it twice
+                    messageAlreadyParsed.push(msg);
                 }
-            }
+
+            }   // Else, message has already been parsed, ignore it
         }
 
 
+        // Increment the total number of occurences found by the number found for this user
+        memberStatsArray.nbrWrd += memberStat.wordCtr;
 
         // Pushing the resulting memberStat into the stats array
         memberStatsArray.stats.push(memberStat);
@@ -488,7 +504,7 @@ function deduceFromStats (memberStatsArray) {
     let finalStats = {
 
         // Total number of channels
-        nbrChnls: 0,
+        nbrChnls: memberStatsArray.channels.length,
 
         // Total number of players
         nbrPlyrs: memberStatsArray.stats.length,
@@ -497,17 +513,10 @@ function deduceFromStats (memberStatsArray) {
         nbrMsgs: memberStatsArray.nbrMsg,
 
         // Total number of occurences of the phrase in the array
-        nbrWrd: 0,
+        nbrWrd: memberStatsArray.nbrWrd,
 
         // TODO: Add other stats
     };
-
-
-
-    // Computing the total number of founnd occurences of the phrase
-    memberStatsArray.stats.forEach(stat => {
-        finalStats.nbrWrd += stat.wordCtr;
-    });
 
 
 
@@ -517,7 +526,7 @@ function deduceFromStats (memberStatsArray) {
 
     // Writing the number of players and messages analyzed
     sendback += `**\`${finalStats.nbrPlyrs}\`** player(s) selected.\n`;
-    sendback += `**\`${finalStats.nbrMsgs}\`** message(s) analyzed.\n\n`;
+    sendback += `**\`${finalStats.nbrMsgs}\`** message(s) analyzed over **\`${finalStats.nbrChnls}\`** channel(s).\n\n`;
 
 
     // If a specific player was selected, sendback the number of msgs/user
@@ -527,7 +536,6 @@ function deduceFromStats (memberStatsArray) {
 
 
 
-    // FIXME
     // If there was a word to search for
     if (memberStatsArray.word != undefined) {
 
@@ -538,6 +546,7 @@ function deduceFromStats (memberStatsArray) {
             // Who said it how many times ?
             memberStatsArray.stats.forEach(stat => {
                 if (stat.wordCtr > 0) sendback += `- ${stat.member.toString()} : **\`${stat.wordCtr}\`** of **\`${finalStats.nbrWrd}\`** (**\`${Number.parseFloat(stat.wordCtr*100/finalStats.nbrWrd).toPrecision(4)}%\`** of occurences).\n`;
+
             });
 
         // Else, the word wasn't found anywhere
@@ -616,13 +625,13 @@ module.exports = {
         // Actually get the stats on the args
         try {
             // Telling the user that the query is being processed
-            msg.reply(answerify('Gotcha! This may take a while, please give me a moment :stopwatch:'));
+            const reply = await msg.reply(answerify('Gotcha! This may take a while, please give me a moment :stopwatch:'));
 
             // Getting the compiled stats
             const computedStats = await processParameters(msg, await parseArgs(msg, args));
 
             // Deducing from stats and replying with result
-            msg.reply(answerify(deduceFromStats(computedStats)));
+            reply.edit(answerify(deduceFromStats(computedStats)));
 
         } catch (error) {
 
