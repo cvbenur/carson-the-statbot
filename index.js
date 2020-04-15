@@ -11,8 +11,13 @@ const bot = new Client();
 bot.commands = new Collection();
 bot.aliases = new Collection();
 
+
+
+// Setting globals
 PLAYER_PERMS = DEFAULT_PERMS;
 
+
+// Loading commands
 ["command"].forEach(handler => {
     console.log('Loading commands...');
     require(`./js/handler/${handler}`)(bot);
@@ -20,8 +25,7 @@ PLAYER_PERMS = DEFAULT_PERMS;
 });
 
 
-
-
+// Setting path to .env
 config({
     path: __dirname + "/.env"
 });
@@ -30,10 +34,15 @@ config({
 
 
 
+
+
 // On bot start-up
 bot.on('ready', () => {
+
+    // Display status
     console.log('Bot online.');
 
+    // Set bot's activity
     bot.user.setActivity(
         'Benur write my code',
         { type: "WATCHING" }
@@ -43,7 +52,7 @@ bot.on('ready', () => {
 
 
 
-// Detecting messages
+// On message detection
 bot.on('message', async message => {
 
     // If the message is a Direct Message
@@ -185,10 +194,23 @@ bot.on('message', async message => {
 
 
 
+
+// On error
+bot.on('error', err => {
+
+    // Log error in console
+    console.error(err);
+});
+
+
+
+
+
 // Login in the bot with the TOKEN
 bot.login(process.env.TOKEN);
 
 
+// Exports
 module.exports = {
     BOT: bot,
 };
