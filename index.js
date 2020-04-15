@@ -14,6 +14,7 @@ bot.aliases = new Collection();
 
 
 // Setting globals
+const OWNER = process.env.OWNER;
 PLAYER_PERMS = DEFAULT_PERMS;
 
 
