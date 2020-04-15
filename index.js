@@ -127,7 +127,7 @@ bot.on('message', async message => {
 
             if (permCheck(cmd, message, perms)) {
                 console.log(">>Executing 'ping' command.");
-                command.execute(message);
+                command.execute(message, bot);
             }
             break;
         
