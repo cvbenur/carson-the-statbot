@@ -4,30 +4,42 @@ module.exports = {
     name: 'ping',
     category: "Info",
     description: 'Ping command',
-    execute: async (msg) => {
+    execute: async (msg, bot) => {
+
+        // Acknowledgement
+        const reply = await msg.reply(answerify(':ping_pong: Pinging...\n'));
+
+
+        // Getting the answer
+        let pingAnswer = ':ping_pong: ';
+
         switch(Math.floor(Math.random() * 6) + 1) {
             case 0:
-                msg.channel.send(answerify('Pong!'));
+                pingAnswer += 'Pong !\n';
                 break;
             
             case 1:
-                msg.channel.send(answerify('\'Ping\' yourself!'));
+                pingAnswer += '\'Ping\' yourself !\n';
                 break;
 
             case 2:
-                msg.channel.send(answerify('Oh, I\'m fine, thanks for asking...'));
+                pingAnswer += 'Oh, I\'m fine, thanks for asking...\n';
                 break;
 
             case 3:
-                msg.channel.send(answerify('Well, well, well, who do we have here! Here\'s your \'Pong\', kind stranger!'));
+                pingAnswer += 'Well, well, well, who do we have here! Here\'s your \'Pong\', kind stranger!\n';
                 break;
 
             case 4:
-                msg.channel.send(answerify('Nope. Not saying it. Just because I don\'t want to.'));
+                pingAnswer += 'Nope. Not saying it. Just because I don\'t want to.\n';
                 break;
 
             case 5:
-                msg.channel.send(answerify('**\*Suddenly wakes up\***\nWh- What? Nope, not sleeping! Definitely wasn\'t sleeping !'));
+                pingAnswer += '**\*Suddenly wakes up\***\nHuh? What? Nope, not sleeping! Definitely wasn\'t sleeping !\n';
         }
+
+
+        // Replying
+        reply.edit(answerify(pingAnswer + `Pong latency : ${Math.floor(reply.createdAt - msg.createdAt)} ms.\nAPI Latency : ${Math.round(bot.ws.ping)} ms.`));
     }
 };
