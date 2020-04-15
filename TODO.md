@@ -2,7 +2,7 @@
 
 ## **List of commands left to implement :**
 
-### **The `help` command**
+### **DONE - The `help` command**
 Sending back a link to the command manual
 
 - **`help`**            :    Sends back a link to a command manual
@@ -39,7 +39,7 @@ Computing stats and sending back links to the generated stats.
 - **`stats <global | channel> <player?> <word`**(a string between 2 '_')**`> <time?>`** : Nbr of occurncs of `word` over `time`, Nbr of occurncs of `word`/channel (%) over `time`, Nbr of occurncs of `word`/pers & /channel (%) over `time`
 (No value for `time` -> since creation of server (for `global`) or channel (for `channel`))
 
-### **Keywords for the `stats` command**
+#### **Keywords for the `stats` command**
 Forms recognized by the bot.
 
 - **`<channel>`** arguments must be preceeded by **`c:`**.
@@ -63,11 +63,11 @@ Forms recognized by the bot.
 
 <br>
 
-### **The `prefix` command**
+### **DONE - The `prefix` command**
 Setting the bot's name on the server
 
 - **`prefix <prefix>`** : Sets the bot's prefix to `prefix` on the server
-(Value `default` for `prefix` resets the prefix to default value ('**`-c`**'))
+(Value `default` or `no value` for `prefix` resets the prefix to default value ('**`-c`**'))
 
 #### **Answers to `prefix` command would be in the form :**
 
@@ -88,7 +88,7 @@ When giving the current value for `prefix` :
 > Did you not realise this as you were typing this very command ?
 
 
-When giving resetting the default value of `prefix` :
+When resetting the default value of `prefix` :
 >
 > #### **Carson says**
 >
@@ -97,6 +97,37 @@ When giving resetting the default value of `prefix` :
 > Where did you get that from ?
 > 
 > Alright. I guess I'll accept this.
+
+<br>
+
+### **DONE - The `setspace` command**
+Setting the bot's whitespace identifier on the server
+
+- **`setspace <symbol>`** : Sets the bot's whitespace identifer to `symbol` on the server
+(Values `default` or `no value` for `setspace` resets the server's whitespace identifier to default value ('**`\`**'))
+
+#### **Answers to `setspace` command would be in the form :**
+
+When giving a value for `symbol` :
+>
+> #### **Carson says**
+>
+> Gotcha ! Whitespace identifier set to '`symbol`' for this server..<br>
+
+
+When giving the current value for `symbol` :
+>
+> #### **Carson says**
+>
+> Uhm... That's already the current whitespace identifier here.<br>
+> I'll just pretend like I didn't hear this.
+
+
+When resetting the default value of `symbol` :
+>
+> #### **Carson says**
+>
+> Resetting this server's whitespace identifier to '`\`'.
 
 <br>
 

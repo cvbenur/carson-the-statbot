@@ -90,7 +90,7 @@ module.exports = {
         } else {
 
             // Displaying detected message
-            console.log('MSG FROM : ' + msgAuthor + ' -> ' + msg.content);
+            console.log('SERVER: ' + msg.guild.name + ', Author: ' + msgAuthor + ' -> ' + msg.content);
         }
     },
 
@@ -125,20 +125,21 @@ module.exports = {
 
 
     // Removing whitespaces from array after '\' indicator
-    removeWhitespaceFromArray: (args) => {
+    removeWhitespaceFromArray: (args, symbol) => {
 
-        var ctr=0;
 
-        for (let arg of args) {
-            
-            if (arg.endsWith(WS_SYMBOL)) {
-                if (args[ctr+1] && (!args[ctr+1].startsWith('c:') && !args[ctr+1].startsWith('t:'))) {
-                    args[ctr] = (arg + args[ctr+1]).replace(WS_SYMBOL, ' ');
+        for (let ctr=0; ctr<args.length; ctr++) {
+                
+            if (args[ctr].endsWith(symbol)) {
+
+                if ((args[ctr+1] != undefined) && (!args[ctr+1].startsWith('c:') && !args[ctr+1].startsWith('t:') && !args[ctr+1].startsWith('w:') && !args[ctr+1].startsWith('p:'))) {
+                    
+                    args[ctr] = (args[ctr] + args[ctr+1]).replace(symbol, ' ');
                     args.splice(ctr+1, 1);
+
+                    ctr--;
                 }
             }
-
-            ctr++;
         }
 
         return args;

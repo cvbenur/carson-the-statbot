@@ -48,7 +48,7 @@ module.exports = {
                 if (args[2] === WS_SYMBOL) {
 
                     msg.channel.send(
-                        answerify('Uhm... That\'s already the current whitespace identifier here.\nI\'ll just pretend I didn\'t hear this.')
+                        answerify('Uhm... That\'s already the current whitespace identifier here.\nI\'ll just pretend like I didn\'t hear this.')
                     );
 
                 } else {
@@ -58,7 +58,7 @@ module.exports = {
                     console.log(`>>Whitespace symbol set to : \'${WS_SYMBOL}\'.`);
 
                     msg.channel.send(
-                        answerify('Gotcha ! Whitespace identifier set to `' + WS_SYMBOL +'` for this server.')
+                        answerify('Gotcha ! Whitespace identifier set to `' + WS_SYMBOL + '` for this server.')
                     );
                 }
                 break;
