@@ -6,7 +6,7 @@ module.exports = {
     name: "start",
     category: "Info",
     description: "The basic help command.",
-    execute: async (msg) => {
-        msg.channel.send(answerify('Just type `' + PREFIX.trim() + ' help` to get started.'));
+    execute: async (msg, guildData) => {
+        msg.channel.send(answerify('Just type `' + guildData.prefix.trim() + ' help` to get started.'));
     }
 };
