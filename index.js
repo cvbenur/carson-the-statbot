@@ -81,125 +81,139 @@ bot.on('message', async message => {
 
 
 
-
-
-
     // Getting the current Guild data from the database
-    var guildData = db.collection('guilds').doc(message.guild.id);
+    let guildData;
+    db.collection('guilds').doc(message.guild.id).get().then((query) => {
 
 
-
-    // Setting the permissions to look from
-    const perms = PLAYER_PERMS;
-
-
-    // Logging the message in the console
-    logMessage(message);
+        // If the requested Guild exists in the database, setting current guildData to the retrieved data
+        if (query.exists) guildData = query.data();
 
 
+    }).then(() => {     // Once the current Guild's data has been retrieved
 
 
-    
-    // Detecting commands destined to this bot in messages
-    if (!message.content.startsWith(guildData.prefix.trim()) || message.author.bot) return;
+        // Setting the permissions to look from
+        const perms = PLAYER_PERMS;
 
 
-    // Decomposing the message into arguments
-    var args = message.content.slice(guildData.prefix.length).trim().split(/ +/g);
-    args = removeWhitespaceFromArray(args, guildData.wsSymbol);
-    
-    
-    // Converting the arguments to a command
-    var cmd = args.shift().toLowerCase();
-
-    
-
-
-
-    // Detecting only the prefix
-    if (cmd === "") cmd = 'start';
-
-
-    // Getting the command's function
-    let command = bot.commands.get(cmd);
-    if (!command) command = bot.commands.get(bot.aliases.get(cmd));
+        // Logging the message in the console
+        logMessage(message);
 
 
 
 
 
-    // Triggering command according to 1st argument after prefix
-    switch(cmd) {
+        // Detecting commands destined to this bot in messages
+        if (!message.content.startsWith(guildData.prefix.trim()) || message.author.bot) return;
 
-        // Detected 'help'
-        case 'help':
 
-            if (permCheck(cmd, message, perms)) {
-                console.log(">>Executing 'help' command.");
-                command.execute(message, guildData);
-            }
-            break;
-        
+        // Decomposing the message into arguments
+        var args = message.content.slice(guildData.prefix.length).trim().split(/ +/g);
+        args = removeWhitespaceFromArray(args, guildData.wsSymbol);
 
-        // Detected 'ping'
-        case 'ping':
 
-            if (permCheck(cmd, message, perms)) {
-                console.log(">>Executing 'ping' command.");
-                command.execute(message, bot);
-            }
-            break;
-        
+        // Converting the arguments to a command
+        var cmd = args.shift().toLowerCase();
 
-        // Detected 'prefix'
-        case 'prefix':
+
+
+
+
+        // Detecting only the prefix
+        if (cmd === "") cmd = 'start';
+
+
+        // Getting the command's function
+        let command = bot.commands.get(cmd);
+        if (!command) command = bot.commands.get(bot.aliases.get(cmd));
+
+
+
+
+
+        // Triggering command according to 1st argument after prefix
+        switch(cmd) {
+
+            // Detected 'help'
+            case 'help':
+
+                if (permCheck(cmd, message, perms)) {
+                    console.log(">>Executing 'help' command.");
+                    command.execute(message, guildData);
+                }
+                break;
             
-            if (permCheck(cmd, message, perms)) {
-                console.log(">>Executing 'prefix' command.");
-                command.execute(message, args);
-            }
-            break;
+
+            // Detected 'ping'
+            case 'ping':
+
+                if (permCheck(cmd, message, perms)) {
+                    console.log(">>Executing 'ping' command.");
+                    command.execute(message, bot);
+                }
+                break;
+            
+
+            // Detected 'prefix'
+            case 'prefix':
+                
+                if (permCheck(cmd, message, perms)) {
+                    console.log(">>Executing 'prefix' command.");
+                    command.execute(message, args);
+                }
+                break;
 
 
-        // Detected 'reset'
-        case 'reset':
+            // Detected 'reset'
+            case 'reset':
 
-            if (permCheck(cmd, message, perms)) {
-                console.log(">>Executing 'reset' command.");
-                command.execute(message);
-            }
-            break;
-
-
-        // Detected 'setspace'
-        case 'setspace':
-
-            if(permCheck(cmd, message, perms)) {
-                console.log(">>Executing 'setspace' command.");
-                command.execute(message, args);
-            }
-            break;
+                if (permCheck(cmd, message, perms)) {
+                    console.log(">>Executing 'reset' command.");
+                    command.execute(message);
+                }
+                break;
 
 
-        // Detected 'stats'
-        case 'stats':
+            // Detected 'setspace'
+            case 'setspace':
 
-            if (permCheck(cmd, message, perms)) {
-                console.log(">>Executing 'stats' command.");
-                command.execute(message, args);
-            }
-            break;
+                if(permCheck(cmd, message, perms)) {
+                    console.log(">>Executing 'setspace' command.");
+                    command.execute(message, args);
+                }
+                break;
 
 
-        // Detected 'help'
-        case 'start':
+            // Detected 'stats'
+            case 'stats':
 
-            if (permCheck(cmd, message, perms)) {
-                console.log(">>Executing 'help' command.");
-                command.execute(message);
-            }
-            break;
-    }
+                if (permCheck(cmd, message, perms)) {
+                    console.log(">>Executing 'stats' command.");
+                    command.execute(message, args);
+                }
+                break;
+
+
+            // Detected 'help'
+            case 'start':
+
+                if (permCheck(cmd, message, perms)) {
+                    console.log(">>Executing 'help' command.");
+                    command.execute(message);
+                }
+                break;
+        }
+
+        // End of command execution
+
+
+    }).catch((error) => {     // In case of an error
+
+        // Logging error in console
+        console.error(error);
+        message.reply(answerify("There seems to be an error. Please contact support.\n\n" + error));
+    });
 });
 
 
