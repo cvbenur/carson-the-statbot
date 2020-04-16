@@ -82,8 +82,9 @@ bot.on('message', async message => {
 
 
     // Getting the current Guild data from the database
+    let currentGuildEntry = db.collection('guilds').doc(message.guild.id);
     let guildData;
-    db.collection('guilds').doc(message.guild.id).get().then((query) => {
+    currentGuildEntry.get().then((query) => {
 
 
         // If the requested Guild exists in the database, setting current guildData to the retrieved data
