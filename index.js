@@ -83,7 +83,7 @@ bot.on('message', async message => {
 
 
 
-    
+
     // Getting the current Guild data from the database
     var guildData = db.collection('guilds').doc(message.guild.id);
 
@@ -136,7 +136,7 @@ bot.on('message', async message => {
 
             if (permCheck(cmd, message, perms)) {
                 console.log(">>Executing 'help' command.");
-                command.execute(message);
+                command.execute(message, guildData);
             }
             break;
         
