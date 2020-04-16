@@ -5,6 +5,23 @@ const { config } = require('dotenv');
 const { readFileSync } = require('fs');
 
 
+// Initializing Firebase storage
+const firebase = require('firebase/app');
+const FieldValue = require('firebase-admin').firestore.FieldValue;
+const admin = require('firebase-admin');
+const serviceAccount = require('./serviceAccount.json');
+
+// DB credentials
+admin.initializeApp({
+    credentials: admin.credentials.cert(serviceAccount)
+});
+
+
+// Initializing database
+let db = admin.firestore();
+
+
+
 
 // Initializing bot
 const bot = new Client();
@@ -201,6 +218,22 @@ bot.on('error', err => {
 
     // Log error in console
     console.error(err);
+});
+
+
+
+
+// On guild join
+bot.on('guildCreate', async newGuild => {
+    db.collection('guilds').doc(newGuid.id).set({
+        'guildId': newGuild.id,
+        'guildName': newGuild.name,
+        'guildOwner': newGuild.owner.user.username,
+        'guildOwnerId': newGuild.owner.id,
+        'memberCount': newGuild.memberCount,
+        'prefix': DEFAULT_PREFIX,
+        'ws-symbol': DEFAULT_WS_SYMBOL
+    });
 });
 
 
