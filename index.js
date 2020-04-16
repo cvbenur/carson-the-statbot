@@ -32,7 +32,7 @@ bot.aliases = new Collection();
 
 // Setting globals
 const OWNER = process.env.OWNER;
-PLAYER_PERMS = DEFAULT_PERMS;
+var PLAYER_PERMS = DEFAULT_PERMS;
 
 
 // Loading commands
@@ -81,26 +81,11 @@ bot.on('message', async message => {
 
 
 
-    // Getting this server's prefix, if there isn't one, set it to DEFAULT_PREFIX
-    let prefixes = JSON.parse(readFileSync("./prefixes.json", "utf8"));
-    if (!prefixes[message.guild.id]) {
-        prefixes[message.guild.id] = {
-            prefix: DEFAULT_PREFIX
-        };
-    }
-    PREFIX = prefixes[message.guild.id].prefix;
 
 
-
-    // Getting this server's whitespace identifier, if there isn't one, set it to DEFAULT_WS_SYMBOL
-    let ws = JSON.parse(readFileSync("./ws-symbols.json", "utf8"));
-    if (!ws[message.guild.id]) {
-        ws[message.guild.id] = {
-            symbol: DEFAULT_WS_SYMBOL
-        };
-    }
-    WS_SYMBOL = ws[message.guild.id].symbol;
-
+    
+    // Getting the current Guild data from the database
+    var guildData = db.collection('guilds').doc(message.guild.id);
 
 
 
@@ -114,26 +99,33 @@ bot.on('message', async message => {
 
 
 
+    
     // Detecting commands destined to this bot in messages
-    if (!message.content.startsWith(PREFIX.trim()) || message.author.bot) return;
+    if (!message.content.startsWith(guildData.prefix.trim()) || message.author.bot) return;
 
 
     // Decomposing the message into arguments
-    var args = message.content.slice(PREFIX.length).trim().split(/ +/g);
-    args = removeWhitespaceFromArray(args, WS_SYMBOL);
+    var args = message.content.slice(guildData.prefix.length).trim().split(/ +/g);
+    args = removeWhitespaceFromArray(args, guildData.wsSymbol);
     
     
     // Converting the arguments to a command
     var cmd = args.shift().toLowerCase();
 
     
+
+
+
     // Detecting only the prefix
     if (cmd === "") cmd = 'start';
 
 
-    // Getting the command function
+    // Getting the command's function
     let command = bot.commands.get(cmd);
     if (!command) command = bot.commands.get(bot.aliases.get(cmd));
+
+
+
 
 
     // Triggering command according to 1st argument after prefix
@@ -232,7 +224,7 @@ bot.on('guildCreate', async newGuild => {
         'guildOwnerId': newGuild.owner.id,
         'memberCount': newGuild.memberCount,
         'prefix': DEFAULT_PREFIX,
-        'ws-symbol': DEFAULT_WS_SYMBOL
+        'wsSymbol': DEFAULT_WS_SYMBOL
     });
 });
 
