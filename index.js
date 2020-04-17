@@ -232,6 +232,8 @@ bot.on('error', err => {
 
 // On guild join
 bot.on('guildCreate', async newGuild => {
+
+    // Create new entry in the database for this Guild
     db.collection('guilds').doc(newGuid.id).set({
         'guildId': newGuild.id,
         'guildName': newGuild.name,
@@ -242,6 +244,49 @@ bot.on('guildCreate', async newGuild => {
         'wsSymbol': DEFAULT_WS_SYMBOL
     });
 });
+
+
+
+
+// On guild update
+bot.on('guildUpdate', async (oldGuild, newGuild) => {
+
+    // Update this guild's entry in the database
+    db.collection('guilds').doc(oldGuild.id).update({
+        'guildName': newGuild.name,
+        'guildOwner': newGuild.owner.user.username,
+        'guildOwnerId': newGuild.owner.id
+    });
+});
+
+
+
+
+// On guild member removal
+bot.on('guildMemberRemove', async member => {
+
+    // Update the guild's member count in the database
+    db.collection('guilds').doc(member.guild.id).update({
+
+        'memberCount': FieldValue--
+
+    });
+});
+
+
+
+
+// On guild member addition
+bot.on('guildMemberAdd', async member => {
+
+    // Update the guild's member count in the database
+    db.collection('guilds').doc(member.guild.id).update({
+
+        'memberCount': FieldValue++
+
+    });
+});
+
 
 
 
