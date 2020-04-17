@@ -31,7 +31,7 @@ module.exports = {
     name: "setspace",
     category: "Setting",
     description: "Command to set or reset a server's whitespace identifier.",
-    execute: (msg, args, guildEntry, guildData) => {
+    execute: async (msg, args, guildEntry, guildData) => {
 
         // Retrieving the current WS for this Guild
         WS_SYMBOL = guildData.wsSymbol;

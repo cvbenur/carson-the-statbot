@@ -30,7 +30,7 @@ module.exports = {
     name: "prefix",
     category: "Setting",
     description: "Command to set or reset the bot's prefix.",
-    execute: (msg, args, guildEntry, guildData) => {
+    execute: async (msg, args, guildEntry, guildData) => {
 
         // Retrieving current prefix for this guild
         PREFIX = guildData.prefix;
