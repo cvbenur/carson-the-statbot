@@ -13,7 +13,8 @@ const serviceAccount = require('./serviceAccount.json');
 
 // DB credentials
 admin.initializeApp({
-    credentials: admin.credential.cert(serviceAccount)
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://carson-the-statbot.firebaseio.com"
 });
 
 
@@ -234,7 +235,7 @@ bot.on('error', err => {
 bot.on('guildCreate', async newGuild => {
 
     // Create new entry in the database for this Guild
-    db.collection('guilds').doc(newGuid.id).set({
+    db.collection('guilds').doc(newGuild.id).set({
         'guildId': newGuild.id,
         'guildName': newGuild.name,
         'guildOwner': newGuild.owner.user.username,
