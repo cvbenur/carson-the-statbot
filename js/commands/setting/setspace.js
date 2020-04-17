@@ -34,7 +34,9 @@ module.exports = {
     execute: (msg, args, guildEntry, guildData) => {
 
         // Retrieving the current WS for this Guild
-        WS_SYMBOL = guildData.wsSymbol;
+        guildData.get().then((q) => {
+            WS_SYMBOL = q.wsSymbol;
+        })
 
 
 
