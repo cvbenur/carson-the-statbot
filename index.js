@@ -204,6 +204,9 @@ bot.on('message', async message => {
                     command.execute(message, guildData);
                 }
                 break;
+
+            default:
+                message.reply(answerify(`Sorry, I didn't recognise the command **\`${cmd}\`**.\nMaybe it wasn't meant for me ?\n**\*Stares passive-agressively\***`));
         }
 
         // End of command execution
@@ -214,6 +217,7 @@ bot.on('message', async message => {
         // Logging error in console
         console.error(error);
         message.reply(answerify("There seems to be an error. Please contact support.\n\n" + error));
+
     });
 });
 
@@ -268,7 +272,7 @@ bot.on('guildMemberRemove', async member => {
     // Update the guild's member count in the database
     db.collection('guilds').doc(member.guild.id).update({
 
-        'memberCount': FieldValue--
+        'memberCount': member.guild.memberCount
 
     });
 });
@@ -282,7 +286,7 @@ bot.on('guildMemberAdd', async member => {
     // Update the guild's member count in the database
     db.collection('guilds').doc(member.guild.id).update({
 
-        'memberCount': FieldValue++
+        'memberCount': member.guild.memberCount
 
     });
 });
