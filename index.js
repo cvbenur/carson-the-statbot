@@ -57,14 +57,15 @@ config({
 // On bot start-up
 bot.on('ready', () => {
 
-    // Display status
-    console.log('Bot online.');
-
     // Set bot's activity
     bot.user.setActivity(
         'Benur write my code',
         { type: "WATCHING" }
     );
+
+
+    // Display status
+    console.log('Bot online.');
 });
 
 
