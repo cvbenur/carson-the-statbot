@@ -53,6 +53,7 @@ config({
 
 
 
+// Handling events
 
 // On bot start-up
 bot.on('ready', () => {
