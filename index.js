@@ -13,7 +13,7 @@ const serviceAccount = require('./serviceAccount.json');
 
 // DB credentials
 admin.initializeApp({
-    credentials: admin.credentials.cert(serviceAccount)
+    credentials: admin.credential.cert(serviceAccount)
 });
 
 
@@ -54,7 +54,6 @@ config({
 
 
 // Handling events
-
 // On bot start-up
 bot.on('ready', () => {
 
