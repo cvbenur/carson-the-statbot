@@ -191,7 +191,7 @@ bot.on('message', async message => {
 
                 if (permCheck(cmd, message, perms)) {
                     console.log(">>Executing 'stats' command.");
-                    command.execute(message, args);
+                    command.execute(message, args, guildData);
                 }
                 break;
 
