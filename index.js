@@ -2,7 +2,6 @@ const { Client, Collection } = require('discord.js');
 const { DEFAULT_PERMS, DEFAULT_PREFIX, DEFAULT_WS_SYMBOL } = require('./config.json');
 const { answerify, logMessage, permCheck, removeWhitespaceFromArray } = require('./js/utilities.js');
 const { config } = require('dotenv');
-const { readFileSync } = require('fs');
 
 
 // Initializing Firebase storage
@@ -81,6 +80,15 @@ bot.on('message', async message => {
     }
 
 
+    // Setting the permissions to look from
+    const perms = PLAYER_PERMS;
+
+
+    // Logging the message in the console
+    logMessage(message);
+
+
+
 
     // Getting the current Guild data from the database
     let currentGuildEntry = db.collection('guilds').doc(message.guild.id);
@@ -95,19 +103,10 @@ bot.on('message', async message => {
     }).then(() => {     // Once the current Guild's data has been retrieved
 
 
-        // Setting the permissions to look from
-        const perms = PLAYER_PERMS;
-
-
-        // Logging the message in the console
-        logMessage(message);
-
-
-
-
-
         // Detecting commands destined to this bot in messages
         if (!message.content.startsWith(guildData.prefix.trim()) || message.author.bot) return;
+
+    
 
 
         // Decomposing the message into arguments
@@ -202,7 +201,7 @@ bot.on('message', async message => {
 
                 if (permCheck(cmd, message, perms)) {
                     console.log(">>Executing 'help' command.");
-                    command.execute(message);
+                    command.execute(message, guildData);
                 }
                 break;
         }
