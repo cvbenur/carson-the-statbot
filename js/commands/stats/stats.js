@@ -4,6 +4,9 @@ const { EMBED_COLOR } = require('../../../config.json');
 const moment = require('moment');
 
 
+var PREFIX;
+
+
 
 // Returning a channel object from a name
 function getChannelFromName (msg, name) {
@@ -579,9 +582,14 @@ module.exports = {
     name: "stats",
     category: "Stat",
     description: "Compiles and sends back stats.",
-    execute: async (msg, args) => {
+    execute: async (msg, args, guildData) => {
+
+        // Retrieving this Guild's prefix
+        PREFIX = guildData.prefix;
 
 
+
+        
         // If there are no arguments after 'stats'
         if (args.length === 0) {
             msg.channel.send(answerify('Type `' + PREFIX.trim() + ' stats help` to get started with some stats.'));

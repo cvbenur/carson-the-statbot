@@ -2,7 +2,24 @@ const { Client, Collection } = require('discord.js');
 const { DEFAULT_PERMS, DEFAULT_PREFIX, DEFAULT_WS_SYMBOL } = require('./config.json');
 const { answerify, logMessage, permCheck, removeWhitespaceFromArray } = require('./js/utilities.js');
 const { config } = require('dotenv');
-const { readFileSync } = require('fs');
+
+
+// Initializing Firebase storage
+const firebase = require('firebase/app');
+const FieldValue = require('firebase-admin').firestore.FieldValue;
+const admin = require('firebase-admin');
+const serviceAccount = require('./serviceAccount.json');
+
+// DB credentials
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://carson-the-statbot.firebaseio.com"
+});
+
+
+// Initializing database
+let db = admin.firestore();
+
 
 
 
@@ -15,7 +32,7 @@ bot.aliases = new Collection();
 
 // Setting globals
 const OWNER = process.env.OWNER;
-PLAYER_PERMS = DEFAULT_PERMS;
+var PLAYER_PERMS = DEFAULT_PERMS;
 
 
 // Loading commands
@@ -36,7 +53,7 @@ config({
 
 
 
-
+// Handling events
 // On bot start-up
 bot.on('ready', () => {
 
@@ -63,30 +80,6 @@ bot.on('message', async message => {
     }
 
 
-
-    // Getting this server's prefix, if there isn't one, set it to DEFAULT_PREFIX
-    let prefixes = JSON.parse(readFileSync("./prefixes.json", "utf8"));
-    if (!prefixes[message.guild.id]) {
-        prefixes[message.guild.id] = {
-            prefix: DEFAULT_PREFIX
-        };
-    }
-    PREFIX = prefixes[message.guild.id].prefix;
-
-
-
-    // Getting this server's whitespace identifier, if there isn't one, set it to DEFAULT_WS_SYMBOL
-    let ws = JSON.parse(readFileSync("./ws-symbols.json", "utf8"));
-    if (!ws[message.guild.id]) {
-        ws[message.guild.id] = {
-            symbol: DEFAULT_WS_SYMBOL
-        };
-    }
-    WS_SYMBOL = ws[message.guild.id].symbol;
-
-
-
-
     // Setting the permissions to look from
     const perms = PLAYER_PERMS;
 
@@ -97,100 +90,135 @@ bot.on('message', async message => {
 
 
 
-    // Detecting commands destined to this bot in messages
-    if (!message.content.startsWith(PREFIX.trim()) || message.author.bot) return;
+    // Getting the current Guild data from the database
+    let currentGuildEntry = db.collection('guilds').doc(message.guild.id);
+    let guildData;
+    currentGuildEntry.get().then((query) => {
 
 
-    // Decomposing the message into arguments
-    var args = message.content.slice(PREFIX.length).trim().split(/ +/g);
-    args = removeWhitespaceFromArray(args, WS_SYMBOL);
+        // If the requested Guild exists in the database, setting current guildData to the retrieved data
+        if (query.exists) guildData = query.data();
+
+
+    }).then(() => {     // Once the current Guild's data has been retrieved
+
+
+        // Detecting commands destined to this bot in messages
+        if (!message.content.startsWith(guildData.prefix.trim()) || message.author.bot) return;
+
     
-    
-    // Converting the arguments to a command
-    var cmd = args.shift().toLowerCase();
-
-    
-    // Detecting only the prefix
-    if (cmd === "") cmd = 'start';
 
 
-    // Getting the command function
-    let command = bot.commands.get(cmd);
-    if (!command) command = bot.commands.get(bot.aliases.get(cmd));
+        // Decomposing the message into arguments
+        var args = message.content.slice(guildData.prefix.length).trim().split(/ +/g);
+        args = removeWhitespaceFromArray(args, guildData.wsSymbol);
 
 
-    // Triggering command according to 1st argument after prefix
-    switch(cmd) {
+        // Converting the arguments to a command
+        var cmd = args.shift().toLowerCase();
 
-        // Detected 'help'
-        case 'help':
 
-            if (permCheck(cmd, message, perms)) {
-                console.log(">>Executing 'help' command.");
-                command.execute(message);
-            }
-            break;
-        
 
-        // Detected 'ping'
-        case 'ping':
 
-            if (permCheck(cmd, message, perms)) {
-                console.log(">>Executing 'ping' command.");
-                command.execute(message, bot);
-            }
-            break;
-        
 
-        // Detected 'prefix'
-        case 'prefix':
+        // Detecting only the prefix
+        if (cmd === "") cmd = 'start';
+
+
+        // Getting the command's function
+        let command = bot.commands.get(cmd);
+        if (!command) command = bot.commands.get(bot.aliases.get(cmd));
+
+
+
+
+
+        // Triggering command according to 1st argument after prefix
+        switch(cmd) {
+
+            // Detected 'help'
+            case 'help':
+
+                if (permCheck(cmd, message, perms)) {
+                    console.log(">>Executing 'help' command.");
+                    command.execute(message, guildData);
+                }
+                break;
             
-            if (permCheck(cmd, message, perms)) {
-                console.log(">>Executing 'prefix' command.");
-                command.execute(message, args);
-            }
-            break;
+
+            // Detected 'ping'
+            case 'ping':
+
+                if (permCheck(cmd, message, perms)) {
+                    console.log(">>Executing 'ping' command.");
+                    command.execute(message, bot);
+                }
+                break;
+            
+
+            // Detected 'prefix'
+            case 'prefix':
+                
+                if (permCheck(cmd, message, perms)) {
+                    console.log(">>Executing 'prefix' command.");
+                    command.execute(message, args, currentGuildEntry, guildData);
+                }
+                break;
 
 
-        // Detected 'reset'
-        case 'reset':
+            // Detected 'reset'
+            case 'reset':
 
-            if (permCheck(cmd, message, perms)) {
-                console.log(">>Executing 'reset' command.");
-                command.execute(message);
-            }
-            break;
-
-
-        // Detected 'setspace'
-        case 'setspace':
-
-            if(permCheck(cmd, message, perms)) {
-                console.log(">>Executing 'setspace' command.");
-                command.execute(message, args);
-            }
-            break;
+                if (permCheck(cmd, message, perms)) {
+                    console.log(">>Executing 'reset' command.");
+                    command.execute(message, currentGuildEntry);
+                }
+                break;
 
 
-        // Detected 'stats'
-        case 'stats':
+            // Detected 'setspace'
+            case 'setspace':
 
-            if (permCheck(cmd, message, perms)) {
-                console.log(">>Executing 'stats' command.");
-                command.execute(message, args);
-            }
-            break;
+                if(permCheck(cmd, message, perms)) {
+                    console.log(">>Executing 'setspace' command.");
+                    command.execute(message, args, currentGuildEntry, guildData);
+                }
+                break;
 
 
-        // Detected 'help'
-        case 'start':
+            // Detected 'stats'
+            case 'stats':
 
-            if (permCheck(cmd, message, perms)) {
-                console.log(">>Executing 'help' command.");
-                command.execute(message);
-            }
-            break;
-    }
+                if (permCheck(cmd, message, perms)) {
+                    console.log(">>Executing 'stats' command.");
+                    command.execute(message, args, guildData);
+                }
+                break;
+
+
+            // Detected 'help'
+            case 'start':
+
+                if (permCheck(cmd, message, perms)) {
+                    console.log(">>Executing 'help' command.");
+                    command.execute(message, guildData);
+                }
+                break;
+
+            default:
+                message.reply(answerify(`Sorry, I didn't recognise the command **\`${cmd}\`**.\nMaybe it wasn't meant for me ?\n**\*Stares passive-agressively\***`));
+        }
+
+        // End of command execution
+
+
+    }).catch((error) => {     // In case of an error
+
+        // Logging error in console
+        console.error(error);
+        message.reply(answerify("There seems to be an error. Please contact support.\n\n" + error));
+
+    });
 });
 
 
@@ -202,6 +230,67 @@ bot.on('error', err => {
     // Log error in console
     console.error(err);
 });
+
+
+
+
+// On guild join
+bot.on('guildCreate', async newGuild => {
+
+    // Create new entry in the database for this Guild
+    db.collection('guilds').doc(newGuild.id).set({
+        'guildId': newGuild.id,
+        'guildName': newGuild.name,
+        'guildOwner': newGuild.owner.user.username,
+        'guildOwnerId': newGuild.owner.id,
+        'memberCount': newGuild.memberCount,
+        'prefix': DEFAULT_PREFIX,
+        'wsSymbol': DEFAULT_WS_SYMBOL
+    });
+});
+
+
+
+
+// On guild update
+bot.on('guildUpdate', async (oldGuild, newGuild) => {
+
+    // Update this guild's entry in the database
+    db.collection('guilds').doc(oldGuild.id).update({
+        'guildName': newGuild.name,
+        'guildOwner': newGuild.owner.user.username,
+        'guildOwnerId': newGuild.owner.id
+    });
+});
+
+
+
+
+// On guild member removal
+bot.on('guildMemberRemove', async member => {
+
+    // Update the guild's member count in the database
+    db.collection('guilds').doc(member.guild.id).update({
+
+        'memberCount': member.guild.memberCount
+
+    });
+});
+
+
+
+
+// On guild member addition
+bot.on('guildMemberAdd', async member => {
+
+    // Update the guild's member count in the database
+    db.collection('guilds').doc(member.guild.id).update({
+
+        'memberCount': member.guild.memberCount
+
+    });
+});
+
 
 
 

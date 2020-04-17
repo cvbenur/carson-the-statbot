@@ -1,22 +1,28 @@
 const Util = require('../../utilities.js');
-const { readFileSync, writeFileSync } = require('fs');
 const { DEFAULT_PREFIX } = require('../../../config.json');
 
 
+var PREFIX;
+
+
 // Changing the prefix for this server
-function setPrefix (id, newPref) {
+async function setPrefix (guildEntry, newPref) {
 
-    let prefixes = JSON.parse(readFileSync("./prefixes.json", "utf8"));
+    // Updating this Guild's prefix in the database
+    guildEntry.update({
 
-    prefixes[id] = {
-        prefix: newPref + ' '
-    };
+        'prefix': newPref
 
-    writeFileSync("./prefixes.json", JSON.stringify(prefixes), (err) => {
-        if (err) console.log(err);
+    }).then(() => {     // In case of success
+
+        PREFIX = newPref + ' ';
+
+    }).catch((err) => {     // In case of an error
+
+        // Logging the error
+        console.log(err);
+
     });
-
-    PREFIX = newPref + ' ';
 }
 
 
@@ -24,7 +30,12 @@ module.exports = {
     name: "prefix",
     category: "Setting",
     description: "Command to set or reset the bot's prefix.",
-    execute: (msg, args) => {
+    execute: async (msg, args, guildEntry, guildData) => {
+
+        // Retrieving current prefix for this guild
+        PREFIX = guildData.prefix;
+
+
         
         // Checking the number of arguments
         switch (args.length) {
@@ -33,7 +44,7 @@ module.exports = {
             case 0:
 
                 // Reseting the prefix
-                setPrefix(msg.guild.id, DEFAULT_PREFIX);
+                await setPrefix(guildEntry, DEFAULT_PREFIX);
                 console.log('>>Prefix set to default prefix : \'' + PREFIX.trim() + '\'.');
 
                 msg.channel.send(
@@ -55,7 +66,7 @@ module.exports = {
                 } else {
 
                     // Setting the prefix to the new phrase
-                    setPrefix(msg.guild.id, args[0]);
+                    await setPrefix(guildEntry, args[0]);
                     console.log('>>Prefix set to : \'' + PREFIX.trim() + '\'.');
 
                     msg.channel.send(
