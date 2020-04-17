@@ -1,20 +1,28 @@
 const { answerify } = require('../../utilities.js');
-const { readFileSync, writeFileSync } = require('fs');
+const { DEFAULT_WS_SYMBOL } = require('../../../config.json');
+
+
+var WS_SYMBOL;
 
 
 // Set whitespace symbol for this guild
-function setWhitespaceSymbol (id, newSymbol) {
-    let ws = JSON.parse(readFileSync("./ws-symbols.json", "utf8"));
+async function setWhitespaceSymbol (guildEntry, newSymbol) {
+    
+    // Updating the Guild's prefix in the database
+    guildEntry.update({
 
-    ws[id] = {
-        symbol: newSymbol
-    };
+        'wsSymbol': newSymbol
 
-    writeFileSync("./ws-symbols.json", JSON.stringify(ws), (err) => {
-        if (err) console.log(err);
+    }).then(() => {     // In case of success
+
+        WS_SYMBOL = newSymbol;
+
+    }).catch((err) => {     // In case of an error
+
+        // Logging the error
+        console.error(err);
+
     });
-
-    WS_SYMBOL = newSymbol;
 }
 
 
@@ -23,7 +31,12 @@ module.exports = {
     name: "setspace",
     category: "Setting",
     description: "Command to set or reset a server's whitespace identifier.",
-    execute: (msg, args) => {
+    execute: (msg, args, guildEntry, guildData) => {
+
+        // Retrieving the current WS for this Guild
+        WS_SYMBOL = guildData.wsSymbol;
+
+
 
         // Checking the number of arguments
         switch (args.length) {
@@ -32,7 +45,7 @@ module.exports = {
             case 0:
 
                 // Reseting the ws-symbol
-                setWhitespaceSymbol(msg.guild.id, DEFAULT_WS_SYMBOL);
+                await setWhitespaceSymbol(guildEntry, DEFAULT_WS_SYMBOL);
                 console.log(`>>Whitespace symbol set to default : \'${WS_SYMBOL}\'.`);
 
                 msg.channel.send(
@@ -54,7 +67,7 @@ module.exports = {
                 } else {
 
                     // Setting the ws-symbol to the new phrase
-                    setWhitespaceSymbol(msg.guild.id, args[0]);
+                    await setWhitespaceSymbol(guildEntry, args[0]);
                     console.log(`>>Whitespace symbol set to : \'${WS_SYMBOL}\'.`);
 
                     msg.channel.send(

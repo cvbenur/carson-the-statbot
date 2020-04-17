@@ -181,7 +181,7 @@ bot.on('message', async message => {
 
                 if(permCheck(cmd, message, perms)) {
                     console.log(">>Executing 'setspace' command.");
-                    command.execute(message, args);
+                    command.execute(message, args, currentGuildEntry, guildData);
                 }
                 break;
 
