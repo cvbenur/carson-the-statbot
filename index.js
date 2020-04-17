@@ -171,7 +171,7 @@ bot.on('message', async message => {
 
                 if (permCheck(cmd, message, perms)) {
                     console.log(">>Executing 'reset' command.");
-                    command.execute(message);
+                    command.execute(message, currentGuildEntry);
                 }
                 break;
 

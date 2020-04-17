@@ -10,10 +10,10 @@ module.exports = {
     name: "reset",
     category: "Setting",
     description: "Resets Carson's configuration to default.",
-    execute: async (msg) => {
+    execute: async (msg, guildEntry) => {
 
-        setPrefix(msg.member.guild.id, DEFAULT_PREFIX);
-        setWhitespaceSymbol(msg.member.guild.id, DEFAULT_WS_SYMBOL);
+        await setPrefix(guildEntry, DEFAULT_PREFIX);
+        await setWhitespaceSymbol(guildEntry, DEFAULT_WS_SYMBOL);
         
         msg.channel.send(answerify("**Reset Carson's settings to default.**\nPrefix : `" + DEFAULT_PREFIX.trim() + "`\nWhitespace identifier : `" + DEFAULT_WS_SYMBOL + "`"));
     }
