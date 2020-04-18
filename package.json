@@ -16,7 +16,8 @@
     "dotenv": "^8.2.0",
     "firebase": "^7.14.1",
     "firebase-admin": "^8.10.0",
-    "moment": "^2.24.0"
+    "moment": "^2.24.0",
+    "vega": "^5.10.1"
   },
   "repository": {
     "type": "git",
