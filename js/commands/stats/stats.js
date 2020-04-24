@@ -664,7 +664,7 @@ module.exports = {
 
 
             var stats = {
-                "$schema": "https://vega.github.io/schema/vega/v3.0.json",
+                "$schema": "https://vega.github.io/schema/vega/v5.json",
                 "width": 500,
                 "height": 200,
                 "padding": 5,

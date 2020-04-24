@@ -4,7 +4,7 @@ const { writeFile, unlink } = require('fs');
 
 
 // Delete graph file if it already exists
-function removeExisting (name) {
+function removeExistingFile (name) {
     
     unlink(`../../../../generated/${name}.png`, (err) => {
         if(err && err.code == 'ENOENT') {
@@ -24,18 +24,14 @@ function generateFileName (len) {
 }
 
 
-// Generate graph from given stats
-function statsToGraph (statsObject) {
-    return view = new vega.View(vega.parse(statsObject)).renderer('none').initialize();
-}
-
-
 // Render image from given graph
-async function graphToImage (graphObject) {
+async function graphToImage (statsObject) {
+
+    graphObject = new vega.View(vega.parse(statsObject), { renderer: 'canvas'});
 
     const pngName = generateFileName(10);
 
-    removeExisting(pngName);
+    removeExistingFile(pngName);
     
     graphObject.toCanvas().then(canvas => {
 
@@ -60,6 +56,6 @@ module.exports = {
 
     // Generate image from given stats and returns the image's name
     generateImg: async (statsObject) => {
-        return (await graphToImage(statsToGraph(statsObject)));
+        return (await graphToImage(statsObject));
     }
 };
