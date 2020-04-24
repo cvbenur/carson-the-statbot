@@ -1,4 +1,3 @@
-const vega = require('vega');
 const { writeFile, unlink } = require('fs');
 
 
@@ -27,23 +26,15 @@ function generateFileName (len) {
 // Render image from given graph
 async function graphToImage (statsObject) {
 
-    graphObject = new vega.View(vega.parse(statsObject), { renderer: 'canvas'});
 
     const pngName = generateFileName(10);
 
     removeExistingFile(pngName);
+
+
+    // Convert stats object to graph
     
-    graphObject.toCanvas().then(canvas => {
-
-        console.log('Writing PNG to file...');
-        writeFile(`../../../../generated/${pngName}.png`, canvas.toBuffer());
-
-    }).catch(err => {
-
-        console.log("Error writing PNG to file:");
-        console.error(err);
-
-    });
+    // Generate image and save file to PNG in the "../../../../" directory
 
     
     return pngName;
