@@ -18,8 +18,8 @@ function removeExistingFile (name) {
 
 
 // Generate a random name for the file to be created
-function generateFileName (len) {
-    return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, len);
+function generateHexString (length) {
+    return [...Array(length)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
 }
 
 
@@ -27,7 +27,8 @@ function generateFileName (len) {
 async function graphToImage (statsObject) {
 
 
-    const pngName = generateFileName(10);
+    // Generate a new 10-char hex string
+    const pngName = generateHexString(10);
 
     removeExistingFile(pngName);
 
