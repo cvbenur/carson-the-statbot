@@ -329,7 +329,6 @@ async function processParameters (msg, line) {
 }
 
 
-
 // Compute number of occurences in string
 function occurrences (message, phrase, allowOverlapping) {
     message += "";
@@ -349,7 +348,6 @@ function occurrences (message, phrase, allowOverlapping) {
     }
     return n;
 }
-
 
 // FIXME: 80msg diff between fetched and parsed when specifying only word
 // Compiling basic stats
@@ -653,16 +651,11 @@ module.exports = {
             const computedStats = await processParameters(msg, await parseArgs(msg, args));
 
 
-
             // Deducing from stats and replying with result
-
-            var embed = answerify(deduceFromStats(computedStats));
-
-
-            //reply.edit(embed);
+            let embed = answerify(deduceFromStats(computedStats));
 
 
-            var stats = {
+            var vegaStatsExample = {
                 "$schema": "https://vega.github.io/schema/vega/v5.json",
                 "description": "A basic line chart example.",
                 "width": 500,
