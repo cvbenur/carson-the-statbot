@@ -1,3 +1,4 @@
+const { unlink } = require('fs');
 const { MessageEmbed } = require('discord.js');
 const { EMBED_COLOR } = require('../defaultConfig.json');
 
@@ -61,6 +62,34 @@ function answerify (description) {
 module.exports = {
     
     answerify,
+
+
+    // Remove existing generated file
+    removeExistingFile: async (name) => {
+
+        let locName = "";
+
+        // Check the file's extension
+        switch (name.split('.')[1]) {
+            case 'svg':
+                locName = `svg/${name}`;
+                break;
+            
+            case 'png':
+                locName = `png/${name}`;
+                break;
+
+            default: return;
+        }
+        
+        
+        unlink(`./assets/generated/${locName}`, (err) => {
+
+            if(err && err.code == 'ENOENT') console.info(`File '${locName}' doesn't exist, cannot remove it.`);
+            else if (err) console.error(`Error occurred while trying to remove file : '${locName}'`);
+            else console.info(`Removed file : '${locName}'`);
+        });
+    },
 
     
     // "Work In Progress"
