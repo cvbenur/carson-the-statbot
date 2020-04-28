@@ -1,7 +1,7 @@
 const { answerify } = require('../../utilities.js')
 const { setPrefix } = require('./prefix.js');
 const { setWhitespaceSymbol } = require('./setspace.js');
-const { DEFAULT_PREFIX, DEFAULT_WS_SYMBOL } = require('../../../config.json');
+const { DEFAULT_PREFIX, DEFAULT_WS_SYMBOL } = require('../../../defaultConfig.json');
 
 
 

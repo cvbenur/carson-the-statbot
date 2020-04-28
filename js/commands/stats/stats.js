@@ -1,6 +1,6 @@
 const { answerify } = require('../../utilities.js');
 const { MessageEmbed, TextChannel } = require('discord.js');
-const { EMBED_COLOR } = require('../../../config.json');
+const { EMBED_COLOR } = require('../../../defaultConfig.json');
 const moment = require('moment');
 const { generateImg } = require('./graph/generate.js');
 

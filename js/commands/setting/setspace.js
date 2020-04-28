@@ -1,5 +1,5 @@
 const { answerify } = require('../../utilities.js');
-const { DEFAULT_WS_SYMBOL } = require('../../../config.json');
+const { DEFAULT_WS_SYMBOL } = require('../../../defaultConfig.json');
 
 
 var WS_SYMBOL;
