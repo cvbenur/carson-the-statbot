@@ -775,12 +775,12 @@ module.exports = {
             //reply.edit(embed);
 
             // TEST: sending the new embed in a REPLY
-            msg.reply(embed);
+            await msg.reply(embed);
 
 
 
             // Remove PNG file after we're done with it
-            //removeExistingImage(pngName);
+            removeExistingImage(pngName);
 
 
         } catch (error) {
