@@ -2,6 +2,7 @@ const { writeFileSync } = require('fs');
 const { removeExistingImage } = require('../../../functions.js');
 const vega = require('vega');
 const sharp = require('sharp');
+const graph = require('./graphtypes/graphs.js');
 
 
 
