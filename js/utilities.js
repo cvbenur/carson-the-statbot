@@ -65,7 +65,7 @@ module.exports = {
 
 
     // Remove existing generated file
-    removeExistingFile: async (name) => {
+    removeExistingImage: (name) => {
 
         let locName = "";
 

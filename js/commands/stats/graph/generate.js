@@ -1,5 +1,5 @@
 const { writeFileSync } = require('fs');
-const { removeExistingFile } = require('../../../utilities.js');
+const { removeExistingImage } = require('../../../utilities.js');
 const vega = require('vega');
 const sharp = require('sharp');
 
