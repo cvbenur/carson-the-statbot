@@ -765,21 +765,30 @@ module.exports = {
             };
 
 
-
             // Generate image from the stats
-            const pngName = await generateImg(stats);
+            const pngName = await generateImg(vegaStatsExample);
+            
 
-            embed.attachFiles([`../../../assets/generated/svg/${pngName}`]).setImage(`attachment://${pngName}`);
+            // Attaching the PNG to the existing answer embed
+            embed.attachFiles([`./assets/temp/png/${pngName}`]).setImage(`attachment://${pngName}`);
 
 
-            reply.edit(
-                embed
-            );
+            // TEST: editing the new embed into the CURRENT REPLY
+            //reply.edit(embed);
+
+            // TEST: sending the new embed in a REPLY
+            msg.reply(embed);
+
+
+
+            // Remove PNG file after we're done with it
+            //removeExistingImage(pngName);
+
 
         } catch (error) {
 
             // In case of an error, report it
-            reply.edit(answerify(error));
+            reply.edit(answerify(error + "\n\nPlease have your Admin contact our support."));
         }
     }
 };

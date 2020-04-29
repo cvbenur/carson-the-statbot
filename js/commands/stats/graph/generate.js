@@ -14,10 +14,10 @@ function generateHexString (length) {
 // Convert SVG file to PNG file
 async function convertSVGToPNG (imgName) {
 
-    await sharp(`./assets/generated/svg/${imgName}.svg`)
+    await sharp(`./assets/temp/svg/${imgName}.svg`)
     .flatten({background :{r: 255, g: 255, b: 255, alpha: 1}})
     .png()
-    .toFile(`./assets/generated/png/${imgName}.png`)
+    .toFile(`./assets/temp/png/${imgName}.png`)
     .then(() => {
 
         console.log(`PNG file generated : '${imgName}.png'`);

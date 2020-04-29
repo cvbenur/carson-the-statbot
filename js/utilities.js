@@ -83,7 +83,7 @@ module.exports = {
         }
         
         
-        unlink(`./assets/generated/${locName}`, (err) => {
+        unlink(`./assets/temp/${locName}`, (err) => {
 
             if(err && err.code == 'ENOENT') console.info(`File '${locName}' doesn't exist, cannot remove it.`);
             else if (err) console.error(`Error occurred while trying to remove file : '${locName}'`);
