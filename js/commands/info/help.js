@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-const { EMBED_COLOR } = require('../../../config.json');
+const { EMBED_COLOR } = require('../../../defaultConfig.json');
 
 module.exports = {
     name: "help",

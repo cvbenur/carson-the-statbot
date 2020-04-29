@@ -1,5 +1,5 @@
 const { Client, Collection } = require('discord.js');
-const { DEFAULT_PERMS, DEFAULT_PREFIX, DEFAULT_WS_SYMBOL } = require('./config.json');
+const { DEFAULT_PERMS, DEFAULT_PREFIX, DEFAULT_WS_SYMBOL } = require('./defaultConfig.json');
 const { answerify, logMessage, permCheck, removeWhitespaceFromArray } = require('./js/utilities.js');
 const { config } = require('dotenv');
 

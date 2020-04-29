@@ -1,7 +1,8 @@
 TODO.md
 node_modules
-config.json
 prefixes.json
 ws-symbols.json
 .env
 serviceAccount.json
+assets/generated/png/*
+assets/generated/svg/*
