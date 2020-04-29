@@ -575,7 +575,6 @@ function deduceFromStats (memberStatsArray) {
 
 
 
-
 module.exports = {
     name: "stats",
     category: "Stat",
@@ -654,11 +653,10 @@ module.exports = {
             // Deducing from stats and replying with result
             let embed = answerify(deduceFromStats(computedStats));
 
-
             var vegaStatsExample = {
                 "$schema": "https://vega.github.io/schema/vega/v5.json",
                 "description": "A basic line chart example.",
-                "width": 500,
+                "width": 300,
                 "height": 200,
                 "padding": 5,
               

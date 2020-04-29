@@ -27,8 +27,10 @@ function printEmbedFromMessage (embeds, msgAuthor) {
     // For each embed in the message
     embeds.forEach(emb => {
 
+        let msgContent = "";
+
         // Loading the embed into a local String
-        let msgContent = '\nDescription :\n\t' + addTabOnLine(emb.description);
+        if (embeds.description != undefined) msgContent = '\nDescription :\n\t' + addTabOnLine(emb.description);
 
 
         // If there are any fields in the embed
