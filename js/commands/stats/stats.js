@@ -1,4 +1,4 @@
-const { answerify, removeExistingImage } = require('../../utilities.js');
+const { answerify, removeExistingImage } = require('../../functions.js');
 const { MessageEmbed,  TextChannel } = require('discord.js');
 const { EMBED_COLOR } = require('../../../defaultConfig.json');
 const moment = require('moment');

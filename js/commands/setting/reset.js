@@ -1,4 +1,4 @@
-const { answerify } = require('../../utilities.js')
+const { answerify } = require('../../functions.js')
 const { setPrefix } = require('./prefix.js');
 const { setWhitespaceSymbol } = require('./setspace.js');
 const { DEFAULT_PREFIX, DEFAULT_WS_SYMBOL } = require('../../../defaultConfig.json');

@@ -1,4 +1,4 @@
-const Util = require('../../utilities.js');
+const Util = require('../../functions.js');
 const { DEFAULT_PREFIX } = require('../../../defaultConfig.json');
 
 
