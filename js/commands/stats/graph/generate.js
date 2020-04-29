@@ -31,44 +31,45 @@ async function convertSVGToPNG (imgName) {
 
 
 // Render image from given graph
-async function graphToImage (statsObject) {
+function graphToImage (statsObject) {
 
-    // Generate a new 10-char hex string
-    const imgName = generateHexString(10);
+    return new Promise(async (resolve, reject) => {
 
-
-    var view = new vega.View(vega.parse(statsObject), {renderer: 'none'});
-
-
-    // generate a static PNG image
-    view.toSVG().then(async (svg) => {
+        // Generate a new 10-char hex string
+        const imgName = generateHexString(10);
 
 
-        // Write SVG to file
-        writeFileSync(`./assets/generated/svg/${imgName}.svg`, svg);
+        var view = new vega.View(vega.parse(statsObject), {renderer: 'none'});
 
 
-        // Remove PNG file with same name if it exists
-        await removeExistingFile(imgName + '.png');
+        try {
+            const svg = await view.toSVG();
+
+            // Write SVG to file
+            writeFileSync(`./assets/temp/svg/${imgName}.svg`, svg);
 
 
-        // Convert SVG file to PNG file
-        await convertSVGToPNG(imgName);
+            // Remove PNG file with same name if it exists
+            removeExistingImage(imgName + '.png');
 
 
-        // Remove corresponding temporary SVG file
-        await removeExistingFile(imgName + '.svg');
-        
+            // Convert SVG file to PNG file
+            await convertSVGToPNG(imgName);
 
-    }).catch(function(err) {
 
-        console.error(err);
+            // Remove corresponding temporary SVG file
+            removeExistingImage(imgName + '.svg');
 
+
+            // Return the name of the generated PNG file
+            resolve(`${imgName}.png`);
+
+        } catch (err) {
+
+            reject(err);
+
+        }
     });
-
-    
-    // Return the name of the generated PNG file
-    return `${imgName}.png`;
 }
 
 
@@ -77,7 +78,5 @@ async function graphToImage (statsObject) {
 module.exports = {
 
     // Generate image from given stats and returns the image's name
-    generateImg: async (statsObject) => {
-        return (await graphToImage(statsObject));
-    },
+    generateImg: graphToImage,
 };
