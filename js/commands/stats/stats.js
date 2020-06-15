@@ -3,7 +3,6 @@ const { MessageEmbed,  TextChannel } = require('discord.js');
 const { EMBED_COLOR } = require('../../../defaultConfig.json');
 const moment = require('moment');
 const { generateImg } = require('./graph/generate.js');
-const { lineGraphFrom } = require('./graph/graphtypes/linegraph.js');
 
 var PREFIX;
 
