@@ -100,7 +100,8 @@ function extractDataFromStats () {
             name: "table",
             values: [
                 {x: 0, y: 28, c:0}, {x: 0, y: 20, c:1},
-                {x: 0, y: 28, c:0}, {x: 0, y: 20, c:1}
+                {x: 1, y: 28, c:0}, {x: 1, y: 20, c:1},
+                {x: 2, y: 28, c:0}, {x: 2, y: 20, c:1}
             ]
         }
     ];
@@ -109,16 +110,10 @@ function extractDataFromStats () {
 
 
 module.exports = {
-    lineGraphFrom: () => {
-
-        const graphTemplate = template;
-
-        
+    lineGraphFrom: (statsObject, graphTemplate = template) => {
 
         graphTemplate["data"] = extractDataFromStats();
 
-
-        
-        console.log(graphTemplate.data);
+        return graphTemplate;
     }
 };
