@@ -2,7 +2,8 @@ const { writeFileSync } = require('fs');
 const { removeExistingImage } = require('../../../functions.js');
 const vega = require('vega');
 const sharp = require('sharp');
-const graph = require('./graphtypes/graphs.js');
+const graphtypes = require('./graphtypes/graphs.js');
+const { lineGraphFrom } = require('./graphtypes/linegraph.js');
 
 
 
@@ -40,7 +41,7 @@ function graphToImage (statsObject) {
         const imgName = generateHexString(10);
 
 
-        var view = new vega.View(vega.parse(statsObject), {renderer: 'none'});
+        var view = new vega.View(vega.parse(lineGraphFrom(statsObject)), {renderer: 'none'});
 
 
         try {
