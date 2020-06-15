@@ -1,6 +1,6 @@
-const template = JSON.parse({
+const template = JSON.parse(JSON.stringify({
     "$schema": "https://vega.github.io/schema/vega/v5.json",
-    "description": "A basic line chart example.",
+    "description": "Linegraph template.",
     "width": 300,
     "height": 200,
     "padding": 5,
@@ -91,12 +91,34 @@ const template = JSON.parse({
         ]
       }
     ]
-});
+}));
+
+
+function extractDataFromStats () {
+    return testData = [
+        {
+            name: "table",
+            values: [
+                {x: 0, y: 28, c:0}, {x: 0, y: 20, c:1},
+                {x: 0, y: 28, c:0}, {x: 0, y: 20, c:1}
+            ]
+        }
+    ];
+}
 
 
 
 module.exports = {
-    lineGraphFrom: function (statsObject) {
-        console.log(template);
+    lineGraphFrom: () => {
+
+        const graphTemplate = template;
+
+        
+
+        graphTemplate["data"] = extractDataFromStats();
+
+
+        
+        console.log(graphTemplate.data);
     }
 };
