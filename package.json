@@ -1,32 +1,31 @@
 {
-  "name": "carson-statbot",
+  "name": "test-statbot",
   "version": "1.0.0",
-  "description": "Write README.md / doc.",
-  "main": "index.js",
+  "description": "",
+  "main": "src/Carson.ts",
   "scripts": {
-    "start": "node .",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint ."
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
   "author": "cvbenur",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
+    "@typeit/discord": "^4.0.8",
+    "@types/dotenv": "^8.2.0",
+    "@types/firebase": "^3.2.1",
+    "@types/node": "^14.6.0",
     "ascii-table": "0.0.9",
-    "discord.js": "^12.2.0",
+    "discord.js": "^12.3.1",
     "dotenv": "^8.2.0",
-    "firebase": "^7.14.2",
-    "firebase-admin": "^8.11.0",
-    "moment": "^2.24.0",
-    "sharp": "^0.25.2",
-    "vega": "^5.10.1"
+    "firebase": "^7.19.0",
+    "firebase-admin": "^9.1.1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/cvbenur/statbot.git"
-  },
-  "bugs": {
-    "url": "https://github.com/cvbenur/statbot/issues"
-  },
-  "homepage": "https://github.com/cvbenur/statbot#readme",
-  "devDependencies": {}
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^3.9.1",
+    "@typescript-eslint/parser": "^3.9.1",
+    "eslint": "^7.7.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0",
+    "typescript": "^4.0.2"
+  }
 }
