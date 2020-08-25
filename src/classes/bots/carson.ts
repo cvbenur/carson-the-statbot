@@ -7,13 +7,19 @@ import { answerify } from '../../utils/functions/message';
 import { NotDM } from '../guards/notdm.guard';
 
 
-async function prefixBehaviour(message: Message): Promise<string> {
+function prefixBehaviour(message: Message): Promise<string> {
 
-  const ref = db.guildsCollection.doc(message.guild.id);
-  const doc = await ref.get();
+  return new Promise(async (resolve, reject) => {
+    try {
+      const ref = db.guildsCollection.doc(message.guild.id);
+      const doc = await ref.get();
 
-  if (doc.exists) return doc.data().prefix;
-  else return DEFAULT_PREFIX;
+      if (doc.exists) resolve(doc.data().prefix);
+      else resolve(DEFAULT_PREFIX);
+    } catch (err) {
+      reject(err);
+    }
+  });
 }
 
 
