@@ -36,9 +36,9 @@
 
 ### 1. Prefix
 
-**Usage :** `prefix <new prefix>`
+**Usage :** `prefix <new_prefix>`
 
-**Description :** Sets or resets Carson's prefix. Use `prefix default` to reset.
+**Description :** Sets or resets Carson's prefix. Use `prefix <new_prefix><whitespace_identifier>` in order to add a whitespace at the end of your prefix. Use `prefix default` to reset.
 
 **Admin only by default :** Yes.
 
@@ -46,9 +46,9 @@
 
 ### 2. Setspace
 
-**Usage :** `setspace <new identifier>`
+**Usage :** `setspace <new_identifier>`
 
-**Description :** Sets or resets Carson's whitespace identifier. Use `setspace default` to reset.
+**Description :** Sets or resets Carson's whitespace identifier. Use `setspace <new_identifier><whitespace_identifier>` in order to add a whitespace at the end of your prefix. Use `setspace default` to reset.
 
 **Admin only by default :** Yes.
 
@@ -78,9 +78,11 @@
 
 ### 1. Stats
 
-**Usage :** `stats <member?> <channel?> <number of weeks?> [phrase?]`
+**Usage :** `stats <member?> <channel?> <number of weeks?> [phrase_to_find?]`
 
-**Description :** Compiles stats on the given parameters. Parameters marked here with `?` are optionnal and will default to "all". Phrases must be given between brackets (`[` at the beginning and `]` at the end).
+**Description :** Compiles stats on the given parameters. Parameters marked here with `?` are optionnal and will default to "all". Phrases must be given between brackets (`[` at the beginning and `]` at the end), and with `_` between each word.
+
+> The phrase `how are you` can be found by typing `[how_are_you]`.
 
 **Admin only by default :** No.
 
@@ -90,7 +92,9 @@
 
 **Usage :** `graph <member?> <channel?> <number of weeks?> [phrase?]`
 
-**Description :** Compiles stats on the given parameters and outputs a graph on the compiled data. Parameters marked here with `?` are optionnal and will default to "all". Phrases must be given between brackets (`[` at the beginning and `]` at the end).
+**Description :** Compiles stats on the given parameters and outputs a graph on the compiled data. Parameters marked here with `?` are optionnal and will default to "all". Phrases must be given between brackets (`[` at the beginning and `]` at the end), and with `_` between each word.
+
+> The phrase `how are you` can be found by typing `[how_are_you]`.
 
 **Admin only by default :** No.
 
