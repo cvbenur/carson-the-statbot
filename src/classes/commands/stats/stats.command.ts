@@ -52,6 +52,7 @@ export abstract class Stats {
     answer += `\n:white_check_mark: Messages parsed - \`${fetchedMessages.length}\` retrieved.`;
 
 
+
     reply.edit(
       answerify(answer + '\n:hourglass_flowing_sand: Computing stats...')
     );
@@ -72,7 +73,7 @@ export abstract class Stats {
 
   private countOccurences(phrase: string, message: Message, allowOverlapping = false) {
     const content = message.content.toLowerCase() + '';
-    phrase += '';
+    phrase = phrase.toLowerCase() + '';
     if (phrase.length <= 0) return content.length + 1;
 
     let n = 0;
@@ -121,7 +122,7 @@ export abstract class Stats {
       if (!this.isMention(arg as string)) {
         
         if (this.isPhrase(arg as string)) {
-          phrase = (arg as string).slice(1, (arg as string).length - 1).toLowerCase();
+          phrase = (arg as string).slice(1, (arg as string).length - 1).split('_').join(' ');
         } else {
           if (!Number.isNaN(arg)) {
             if (time === null) {
