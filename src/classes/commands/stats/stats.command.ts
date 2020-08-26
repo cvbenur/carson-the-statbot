@@ -34,10 +34,10 @@ export abstract class Stats {
     // Parsing arguments
     const params: SearchParams = this.parseMessageForParams(message);
     let answer = `**__Your query__** :\n` +
-      'Channel(s) : ' + (params.Channel ? `<#${params.Channel}>\n` : '\`**all**\`\n') +
-      'Player(s) : ' + (params.User ? `<@${params.User}>\n` : '\`**all**\`\n') +
-      'Time limit given : ' + (params.TimeAmount ? `\`${params.TimeAmount}\`\n` : '\`**none**\`\n') +
-      'Phrase to look for : ' + (params.Phrase ? `\`${params.Phrase}\`\n` : '\`**none**\`\n');
+      'Channel(s) : ' + (params.Channel ? `<#${params.Channel}>\n` : '**\`all\`**\n') +
+      'Player(s) : ' + (params.User ? `<@${params.User}>\n` : '**\`all\`**\n') +
+      'Time limit given : ' + (params.TimeAmount ? `\`${params.TimeAmount}\`\n` : '**\`none\`**\n') +
+      'Phrase to look for : ' + (params.Phrase ? `\`${params.Phrase}\`\n` : '**\`none\`**\n');
       
 
 
@@ -49,7 +49,7 @@ export abstract class Stats {
 
     // Fetching & filtering messages
     const fetchedMessages: Message[] = await this.getMessagesFromParams(params, message);
-    answer += `\n:heavy_check_mark: Messages parsed - \`${fetchedMessages.length}\` retrieved.`;
+    answer += `\n:white_check_mark: Messages parsed - \`${fetchedMessages.length}\` retrieved.`;
 
 
     reply.edit(
@@ -65,7 +65,7 @@ export abstract class Stats {
 
 
     
-    reply.edit(answerify(answer + '\n:heavy_check_mark: Resolved !'));
+    reply.edit(answerify(answer + '\n:white_check_mark: Resolved !'));
   }
 
 
