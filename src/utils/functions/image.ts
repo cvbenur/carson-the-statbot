@@ -1,32 +1,21 @@
 import { unlink } from 'fs';
 import vega = require('vega');
 import sharp = require('sharp');
+import * as path from 'path';
+
+
+const genFolder = path.join(__dirname, '..', '..', '..', 'generated');
 
 
 // Remove existing generated file
 function removeExistingImage(name: string): void {
-  let locName = '';
-
-  // Check the file's extension
-  switch (name.split('.')[1]) {
-    case 'svg':
-      locName = `svg/${name}`;
-      break;
-
-    case 'png':
-      locName = `png/${name}`;
-      break;
-
-    default:
-      return;
-  }
-
-  unlink(`./assets/temp/${locName}`, (err) => {
-    if (err && err.code === 'ENOENT') { console.info(`File '${locName}' doesn't exist, cannot remove it.`); } else if (err) {
+  
+  unlink(path.join(genFolder, name), (err) => {
+    if (err && err.code === 'ENOENT') { console.info(`File '${name}' doesn't exist, cannot remove it.`); } else if (err) {
       console.error(
-        `Error occurred while trying to remove file : '${locName}'`,
+        `Error occurred while trying to remove file : '${name}'`,
       );
-    } else console.info(`Removed file : '${locName}'`);
+    } else console.info(`Removed file : '${name}'`);
   });
 }
 
@@ -49,7 +38,7 @@ function graphToImage(graphObject): string {
 
     await sharp(Buffer.from(svg))
       .toFormat('png')
-      .toFile(pngName);
+      .toFile(path.join(genFolder, pngName));
 
   }).catch(function(err) {
       console.error(err);
