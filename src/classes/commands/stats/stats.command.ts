@@ -77,7 +77,6 @@ export abstract class Stats {
 
 
 
-    // TODO: Stats on the retrieved messages
     // Number of channels analyzed & persons to filter by
     const persons = params.User === null ? message.guild.members.cache.array().length : 1;
     const channels = params.Channel === null ? message.guild.channels.cache.array().filter((c) => c instanceof TextChannel).length : 1;
@@ -99,8 +98,8 @@ export abstract class Stats {
 
 
 
-    //    5-3. %ages de messages par channel
-    //    5-3. %ages de messages par personne, %ages de messages par personne par channel
+    // TODO: Nbr (%) of messages per person
+    // TODO: Nbr (%) of messages per channel
 
 
 
