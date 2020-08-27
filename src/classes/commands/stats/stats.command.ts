@@ -36,42 +36,102 @@ export abstract class Stats {
     let answer = `**__Your query__** :\n` +
       'Channel(s) : ' + (params.Channel ? `<#${params.Channel}>\n` : '**\`all\`**\n') +
       'Player(s) : ' + (params.User ? `<@${params.User}>\n` : '**\`all\`**\n') +
-      'Time limit given : ' + (params.TimeAmount ? `\`${params.TimeAmount}\`\n` : '**\`none\`**\n') +
-      'Phrase to look for : ' + (params.Phrase ? `\`${params.Phrase}\`\n` : '**\`none\`**\n');
-      
+      'Time limit given : ' + (params.TimeAmount ? `**\`${params.TimeAmount}\`**\n` : '**\`none\`**\n') +
+      'Phrase to look for : ' + (params.Phrase ? `**\`${params.Phrase}\`**\n` : '**\`none\`**\n') +
+      '\n**__Your results__** :\n';
+    
+    const state = {
+      parsing: '\n:hourglass_flowing_sand: Parsing through messages...',
+      computing: '\n:hourglass_flowing_sand: Computing stats...',
+      resolved: '\n:white_check_mark: Resolved !',
+    };
 
 
+
+    // Replying
     const reply = await (message as Message).reply(
-      answerify(answer + '\n:hourglass_flowing_sand: Parsing through messages...')
+      answerify(
+        answer +
+        state.parsing
+      )
     );
 
 
 
     // Fetching & filtering messages
     const fetchedMessages: Message[] = await this.getMessagesFromParams(params, message);
-    answer += `\n:white_check_mark: Messages parsed - \`${fetchedMessages.length}\` retrieved.`;
 
 
 
+    // Updating reply
+    answer += `Number of messages retrieved : **\`${fetchedMessages.length}\`**.\n`;
+    state.parsing = '\n:white_check_mark: Messages parsed.';
     reply.edit(
-      answerify(answer + '\n:hourglass_flowing_sand: Computing stats...')
+      answerify(
+        answer +
+        state.parsing +
+        state.computing
+      )
     );
 
 
-    // TODO: 5. Stats sur les messages
-    // TODO: autoriser les phrases avec des espaces
-    //    5-1. Nombre total de messages, nombre de personnes, nombre de channels
+
+    // TODO: Stats on the retrieved messages
+    // Number of channels analyzed & persons to filter by
+    const persons = params.User === null ? message.guild.members.cache.array().length : 1;
+    const channels = params.Channel === null ? message.guild.channels.cache.array().length : 1;
+    const occurences = params.Phrase === null ? 0 : this.getTotalOccurencesAmongFetched(fetchedMessages, params.Phrase);
+
+
+    // Update reply
+    answer += `Number of channels analyzed : **\`${channels}\`**.\n` +
+      `Number of members to filter by : **\`${persons}\`**.\n` +
+      (params.Phrase === null ? 'No phrase to look for' : `Number of occurences of the phrase : **\`${occurences}\`**`) + '.\n';
+    
+    reply.edit(
+      answerify(
+        answer +
+        state.parsing +
+        state.computing
+      )
+    );
+
+
+
     //    5-3. %ages de messages par channel
     //    5-3. %ages de messages par personne, %ages de messages par personne par channel
 
 
-    
-    reply.edit(answerify(answer + '\n:white_check_mark: Resolved !'));
+
+    // Updating reply
+    state.computing = '\n:white_check_mark: Stats computed.';
+
+
+
+    // Last reply update
+    reply.edit(
+      answerify(
+        answer +
+        state.parsing +
+        state.computing +
+        state.resolved
+      )
+    );
   }
 
 
 
-  private countOccurences(phrase: string, message: Message, allowOverlapping = false) {
+  private getTotalOccurencesAmongFetched(messages: Message[], phrase: string): number {
+    let occurrences = 0;
+
+    for (const msg of messages) {
+      occurrences += this.countOccurencesInMessage(phrase, msg);
+    }
+
+    return occurrences;
+  }
+
+  private countOccurencesInMessage(phrase: string, message: Message, allowOverlapping = false): number {
     const content = message.content.toLowerCase() + '';
     phrase = phrase.toLowerCase() + '';
     if (phrase.length <= 0) return content.length + 1;
