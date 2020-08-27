@@ -34,11 +34,11 @@ export abstract class Stats {
     // Parsing arguments
     const params: SearchParams = this.parseMessageForParams(message);
     let answer = `**__Your query__** :\n` +
-      'Channel(s) : ' + (params.Channel ? `<#${params.Channel}>\n` : '**\`all\`**\n') +
-      'Player(s) : ' + (params.User ? `<@${params.User}>\n` : '**\`all\`**\n') +
-      'Time limit given : ' + (params.TimeAmount ? `**\`${params.TimeAmount}\`**\n` : '**\`none\`**\n') +
-      'Phrase to look for : ' + (params.Phrase ? `**\`${params.Phrase}\`**\n` : '**\`none\`**\n') +
-      '\n**__Your results__** :\n';
+      ':speech_balloon: Channel(s) : ' + (params.Channel ? `<#${params.Channel}>` : '**\`all\`**') + '\n' +
+      ':busts_in_silhouette: Player(s) : ' + (params.User ? `<@${params.User}>` : '**\`all\`**') + '\n' +
+      ':timer_clock: Time limit given : ' + (params.TimeAmount ? `**\`${params.TimeAmount}\`**` : '**\`none\`**') + '\n' +
+      ':mag: Phrase to look for : ' + (params.Phrase ? `**\`${params.Phrase}\`**` : '**\`none\`**') + '\n\n' +
+      '**__Your results__** :\n';
     
     const state = {
       parsing: '\n:hourglass_flowing_sand: Parsing through messages...',
@@ -64,7 +64,7 @@ export abstract class Stats {
 
 
     // Updating reply
-    answer += `Number of messages retrieved : **\`${fetchedMessages.length}\`**.\n`;
+    answer += `:email: Messages retrieved : **\`${fetchedMessages.length}\`**\n`;
     state.parsing = '\n:white_check_mark: Messages parsed.';
     reply.edit(
       answerify(
@@ -79,14 +79,14 @@ export abstract class Stats {
     // TODO: Stats on the retrieved messages
     // Number of channels analyzed & persons to filter by
     const persons = params.User === null ? message.guild.members.cache.array().length : 1;
-    const channels = params.Channel === null ? message.guild.channels.cache.array().length : 1;
+    const channels = params.Channel === null ? message.guild.channels.cache.array().filter((c) => c instanceof TextChannel).length : 1;
     const occurences = params.Phrase === null ? 0 : this.getTotalOccurencesAmongFetched(fetchedMessages, params.Phrase);
 
 
     // Update reply
-    answer += `Number of channels analyzed : **\`${channels}\`**.\n` +
-      `Number of members to filter by : **\`${persons}\`**.\n` +
-      (params.Phrase === null ? 'No phrase to look for' : `Number of occurences of the phrase : **\`${occurences}\`**`) + '.\n';
+    answer += `:speech_balloon: Channels analyzed : **\`${channels}\`**\n` +
+      `:busts_in_silhouette: Members taken into account : **\`${persons}\`**\n` +
+      ':mag: ' + (params.Phrase === null ? 'No phrase to look for' : `Occurences of **\`${params.Phrase}\`** : **\`${occurences}\`**`) + '\n';
     
     reply.edit(
       answerify(
