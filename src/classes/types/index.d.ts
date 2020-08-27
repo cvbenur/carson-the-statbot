@@ -1,6 +1,14 @@
-import * as graphTypes from './graphs/graphs';
+import { SearchParams } from './stats/stats';
+import {
+  LineGraph,
+} from './graphs/graphs';
 
 
 export {
-  graphTypes,
+  SearchParams,
+};
+
+
+export {
+  LineGraph,
 };

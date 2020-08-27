@@ -1,4 +1,4 @@
-import * as LineGraph from './linegraph';
+import { LineGraph } from './linegraph';
 
 
 export {
