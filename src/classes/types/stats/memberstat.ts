@@ -4,7 +4,6 @@ import { MessageStat } from './stats';
 export class MemberStat {
 
   // Attributes
-  private memberId: string;
   private msgStats: Array<MessageStat>;
   private channelCount = 0;
   private phraseCount = 0;
@@ -12,20 +11,12 @@ export class MemberStat {
 
 
   // Ctor
-  constructor(memberId: string) {
-    this.memberId = memberId;
+  constructor() {
     this.msgStats = [];
   }
 
 
   // Methods
-  get MemberId(): string {
-    return this.memberId;
-  }
-  set MemberId(memberId: string) {
-    this.memberId = memberId;
-  }
-
   get MsgStats(): Array<MessageStat> {
     return this.msgStats;
   }
@@ -55,7 +46,7 @@ export class MemberStat {
   }
 
 
-  addMessageStats(messageStat: MessageStat): void {
+  addMessageStat(messageStat: MessageStat): void {
     this.MsgStats.push(messageStat);
     this.deduceEditedCount();
     this.deducePhraseCount();

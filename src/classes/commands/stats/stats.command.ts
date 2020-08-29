@@ -13,7 +13,10 @@ import {
   TextChannel,
 } from 'discord.js';
 import { NotDM } from '../../guards/notdm.guard';
-import { SearchParams } from '../../types/index';
+import {
+  SearchParams,
+  StatsObject,
+} from '../../types/index';
 import { answerify } from '../../../utils/functions/message';
 import moment = require('moment');
 
@@ -34,6 +37,9 @@ export abstract class Stats {
 
     // Parsing arguments
     const params: SearchParams = this.parseMessageForParams(message);
+    const stats: StatsObject = new StatsObject();
+
+
     let answer = `**__Your query__** :\n` +
       ':speech_balloon: Channel(s) : ' + (params.Channel ? `<#${params.Channel}>` : '**\`all\`**') + '\n' +
       ':busts_in_silhouette: Player(s) : ' + (params.User ? `<@${params.User}>` : '**\`all\`**') + '\n' +
@@ -77,16 +83,9 @@ export abstract class Stats {
 
 
 
-    // Number of channels analyzed & persons to filter by
-    const persons = params.User === null ? message.guild.members.cache.array().length : 1;
-    const channels = params.Channel === null ? message.guild.channels.cache.array().filter((c) => c instanceof TextChannel).length : 1;
-    const occurences = params.Phrase === null ? 0 : this.getTotalOccurencesAmongFetched(fetchedMessages, params.Phrase);
-
-
     // Update reply
-    answer += `:speech_balloon: Channels analyzed : **\`${channels}\`**\n` +
-      `:busts_in_silhouette: Members taken into account : **\`${persons}\`**\n` +
-      ':mag: ' + (params.Phrase === null ? 'No phrase to look for' : `Occurences of **\`${params.Phrase}\`** : **\`${occurences}\`**`) + '\n';
+    answer += `:speech_balloon: Channels analyzed : **\`${params.User === null ? message.guild.memberCount : 1}\`**\n` +
+      `:busts_in_silhouette: Members taken into account : **\`${params.Channel === null ? message.guild.channels.cache.array().filter((c) => c instanceof TextChannel).length : 1}\`**\n\n`;
     
     reply.edit(
       answerify(
@@ -98,8 +97,17 @@ export abstract class Stats {
 
 
 
+    // Computing stats
+    await stats.computeStatsFromMessages(fetchedMessages, params.Phrase);
     // TODO: Nbr (%) of messages per person
     // TODO: Nbr (%) of messages per channel
+    answer += ':mag: ' + (params.Phrase === null ? 'No phrase to look for' : `Occurences of **\`${params.Phrase}\`** : **\`${stats.Occurrences}\`**`) + '\n';
+    
+    // Updating answer for phrase count per member
+    stats.sortByPhraseCount();
+    for (const authorStat of stats.authorStats()) {
+      answer += `<@${authorStat.memberId}> said it **\`${authorStat.memberStat.PhraseCount}\`** times (**\`${stats.totalPhraseCountPercentage(authorStat.memberId)}\`**).\n`;
+    }
 
 
 
@@ -117,39 +125,6 @@ export abstract class Stats {
         state.resolved
       )
     );
-  }
-
-
-
-  private getTotalOccurencesAmongFetched(messages: Message[], phrase: string): number {
-    let occurrences = 0;
-
-    for (const msg of messages) {
-      occurrences += this.countOccurencesInMessage(phrase, msg);
-    }
-
-    return occurrences;
-  }
-
-  private countOccurencesInMessage(phrase: string, message: Message, allowOverlapping = false): number {
-    const content = message.content.toLowerCase() + '';
-    phrase = phrase.toLowerCase() + '';
-    if (phrase.length <= 0) return content.length + 1;
-
-    let n = 0;
-    let pos = 0;
-    
-    const step = allowOverlapping ? 1 : phrase.length;
-    
-    while (true) {
-      pos = content.indexOf(phrase, pos);
-      if (pos >= 0) {
-        n += 1;
-        pos += step;
-      } else break;
-    }
-
-    return n;
   }
 
 

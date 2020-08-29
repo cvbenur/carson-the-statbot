@@ -3,6 +3,7 @@ import {
   StatsObject,
   MessageStat,
   MemberStat,
+  ChannelStat,
 } from './stats/stats';
 import {
   LineGraph,
@@ -18,6 +19,7 @@ export {
   StatsObject,
   MessageStat,
   MemberStat,
+  ChannelStat,
 };
 
 export {
