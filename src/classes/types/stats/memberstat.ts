@@ -59,6 +59,7 @@ export class MemberStat {
     this.MsgStats.push(messageStat);
     this.deduceEditedCount();
     this.deducePhraseCount();
+    this.deduceChannelCount();
   }
 
   deduceEditedCount(): void {
