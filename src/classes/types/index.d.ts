@@ -1,5 +1,5 @@
+import { SearchParams } from './searchparams';
 import {
-  SearchParams,
   StatsObject,
   MessageStat,
   MemberStat,
@@ -9,13 +9,16 @@ import {
 } from './graphs/graphs';
 
 
+
 export {
   SearchParams,
+};
+
+export {
   StatsObject,
   MessageStat,
   MemberStat,
 };
-
 
 export {
   LineGraph,
