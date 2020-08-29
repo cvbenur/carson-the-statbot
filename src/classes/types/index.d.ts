@@ -1,4 +1,7 @@
-import { SearchParams } from './stats/stats';
+import {
+  SearchParams,
+  StatsObject,
+} from './stats/stats';
 import {
   LineGraph,
 } from './graphs/graphs';
@@ -6,6 +9,7 @@ import {
 
 export {
   SearchParams,
+  StatsObject,
 };
 
 
