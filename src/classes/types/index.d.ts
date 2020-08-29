@@ -1,6 +1,8 @@
 import {
   SearchParams,
   StatsObject,
+  MessageStat,
+  MemberStat,
 } from './stats/stats';
 import {
   LineGraph,
@@ -10,6 +12,8 @@ import {
 export {
   SearchParams,
   StatsObject,
+  MessageStat,
+  MemberStat,
 };
 
 
