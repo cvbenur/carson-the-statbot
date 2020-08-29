@@ -28,4 +28,11 @@ export class StatsObject {
   set MemberStats(memberStats: Array<MemberStat>) {
     this.memberStats = memberStats;
   }
+
+
+  addMemberStat(stat: MemberStat): void {
+    this.Occurrences += stat.PhraseCount;
+
+    this.MemberStats.push(stat);
+  }
 }
