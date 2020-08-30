@@ -108,7 +108,7 @@ export class StatsObject {
 
 
   private countOccurencesInMessage(phrase: string, message: Message, allowOverlapping = false): number {
-    if (phrase !== null) {
+    if (phrase !== null && !(phrase.startsWith(':') && phrase.endsWith(':'))) {
       const content = message.content.toLowerCase() + '';
       phrase = phrase.toLowerCase() + '';
       if (phrase.length <= 0) return content.length + 1;
@@ -126,6 +126,7 @@ export class StatsObject {
         } else break;
       }
 
+      this.Occurrences += n;
       return n;
     }
 
@@ -157,6 +158,6 @@ export class StatsObject {
 
 
   totalPhraseCountPercentage(memberId: string): number {
-    return Math.round((((this.MemberStats.find((stat) => stat.memberId === memberId).memberStat.PhraseCount * this.Occurrences) / 100) + Number.EPSILON) * 100) / 100;
+    return Math.round((((this.MemberStats.find((stat) => stat.memberId === memberId).memberStat.PhraseCount / this.Occurrences) * 100) + Number.EPSILON) * 100) / 100;
   }
 }

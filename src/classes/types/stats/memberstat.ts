@@ -74,11 +74,11 @@ export class MemberStat {
 
 
   phraseCountPercentage(): number {
-    return Math.round((((this.MsgStats.length * this.PhraseCount) / 100) + Number.EPSILON) * 100) / 100;
+    return Math.round((((this.PhraseCount / this.MsgStats.length) * 100) + Number.EPSILON) * 100) / 100;
   }
 
   editedMessagePercentage(): number {
-    return Math.round((((this.MsgStats.length * this.EditedCount) / 100) + Number.EPSILON) * 100) / 100;
+    return Math.round((((this.EditedCount / this.MsgStats.length) * 100) + Number.EPSILON) * 100) / 100;
   }
 
   messagesPerChannel(): Array<{ id: string; msgCount: number; }> {

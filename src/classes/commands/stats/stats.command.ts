@@ -10,6 +10,7 @@ import {
   Guild,
   GuildChannel,
   Message,
+  MessageEmbed,
   TextChannel,
 } from 'discord.js';
 import { NotDM } from '../../guards/notdm.guard';
@@ -17,7 +18,6 @@ import {
   SearchParams,
   StatsObject,
 } from '../../types/index';
-import { answerify } from '../../../utils/functions/message';
 import moment = require('moment');
 
 
@@ -39,29 +39,32 @@ export abstract class Stats {
     const params: SearchParams = this.parseMessageForParams(message);
     const stats: StatsObject = new StatsObject();
 
-
-    let answer = `**__Your query__** :\n` +
-      ':speech_balloon: Channel(s) : ' + (params.Channel ? `<#${params.Channel}>` : '**\`all\`**') + '\n' +
+    let answer = ':speech_balloon: Channel(s) : ' + (params.Channel ? `<#${params.Channel}>` : '**\`all\`**') + '\n' +
       ':busts_in_silhouette: Player(s) : ' + (params.User ? `<@${params.User}>` : '**\`all\`**') + '\n' +
       ':timer_clock: Time limit given : ' + (params.TimeAmount ? `**\`${params.TimeAmount}\`**` : '**\`none\`**') + '\n' +
-      ':mag: Phrase to look for : ' + (params.Phrase ? `**\`${params.Phrase}\`**` : '**\`none\`**') + '\n\n' +
-      '**__Your results__** :\n';
+      ':mag: Phrase to look for : ' + (params.Phrase ? `**\`${params.Phrase}\`**` : '**\`none\`**') + '\n';
     
     const state = {
-      parsing: '\n:hourglass_flowing_sand: Parsing through messages...',
-      computing: '\n:hourglass_flowing_sand: Computing stats...',
-      resolved: '\n:white_check_mark: Resolved !',
+      parsing: ':hourglass_flowing_sand: Parsing through messages...',
+      parsed: ':white_check_mark: Messages parsed.',
+      computing: ':hourglass_flowing_sand: Computing stats...',
+      computed : ':white_check_mark: Stats computed.',
+      resolved: ':white_check_mark: Resolved !',
     };
+
+    
+    const embed = new MessageEmbed()
+      .setAuthor(Main.Client.user.username, Main.Client.user.displayAvatarURL())
+      .setTitle(`You asked for : \"\`${this.removeMention(message.commandContent, message.guild)}\`\".`)
+      .addField('**Your query :**', answer)
+      .addField('**Results :**', 'Pending...')
+      .addField('State :', state.parsing)
+      .setFooter(`${message.member.nickname ? message.member.nickname : message.author.username} - ${moment(message.createdAt).format('ddd, MMM Do YYYY - kk:mm:ss')}`, message.author.displayAvatarURL());
 
 
 
     // Replying
-    const reply = await (message as Message).reply(
-      answerify(
-        answer +
-        state.parsing
-      )
-    );
+    const reply = await (message as Message).reply(embed);
 
 
 
@@ -71,29 +74,17 @@ export abstract class Stats {
 
 
     // Updating reply
-    answer += `:email: Messages retrieved : **\`${fetchedMessages.length}\`**\n`;
-    state.parsing = '\n:white_check_mark: Messages parsed.';
-    reply.edit(
-      answerify(
-        answer +
-        state.parsing +
-        state.computing
-      )
-    );
+    embed.fields[1].value = `:email: Messages retrieved : **\`${fetchedMessages.length}\`**\n`;
+    embed.fields[2].value = `${state.parsed}\n${state.computing}`;
+    reply.edit(embed);
 
 
 
     // Update reply
-    answer += `:speech_balloon: Channels analyzed : **\`${params.User === null ? message.guild.memberCount : 1}\`**\n` +
-      `:busts_in_silhouette: Members taken into account : **\`${params.Channel === null ? message.guild.channels.cache.array().filter((c) => c instanceof TextChannel).length : 1}\`**\n\n`;
+    embed.fields[1].value += `:speech_balloon: Channels analyzed : **\`${params.Channel === null ? message.guild.channels.cache.array().filter((c) => c instanceof TextChannel).length : 1}\`**\n` +
+      `:busts_in_silhouette: Members taken into account : **\`${params.User === null ? message.guild.memberCount : 1}\`**\n`;
     
-    reply.edit(
-      answerify(
-        answer +
-        state.parsing +
-        state.computing
-      )
-    );
+    reply.edit(embed);
 
 
 
@@ -101,30 +92,29 @@ export abstract class Stats {
     await stats.computeStatsFromMessages(fetchedMessages, params.Phrase);
     // TODO: Nbr (%) of messages per person
     // TODO: Nbr (%) of messages per channel
-    answer += ':mag: ' + (params.Phrase === null ? 'No phrase to look for' : `Occurences of **\`${params.Phrase}\`** : **\`${stats.Occurrences}\`**`) + '\n';
+    embed.fields[1].value += ':mag: ' + (params.Phrase === null ? 'No phrase to look for' : `Occurrences of **\`${params.Phrase}\`** : **\`${stats.Occurrences}\`**`) + '\n';
     
+
+    answer = '';
     // Updating answer for phrase count per member
-    stats.sortByPhraseCount();
-    for (const authorStat of stats.authorStats()) {
-      answer += `<@${authorStat.memberId}> said it **\`${authorStat.memberStat.PhraseCount}\`** times (**\`${stats.totalPhraseCountPercentage(authorStat.memberId)}\`**).\n`;
+    if (params.Phrase) {
+      stats.sortByPhraseCount();
+      for (const authorStat of stats.authorStats().filter((author) => author.memberStat.PhraseCount > 0)) {
+        answer += `<@${authorStat.memberId}> said it **\`${authorStat.memberStat.PhraseCount}\`** times (**\`${stats.totalPhraseCountPercentage(authorStat.memberId)}%\`**).\n`;
+      }
+
+      embed.fields[1].value += answer;
     }
 
 
 
     // Updating reply
-    state.computing = '\n:white_check_mark: Stats computed.';
+    embed.fields[2].value = `${state.parsed}\n${state.computed}\n${state.resolved}`;
 
 
 
     // Last reply update
-    reply.edit(
-      answerify(
-        answer +
-        state.parsing +
-        state.computing +
-        state.resolved
-      )
-    );
+    reply.edit(embed);
   }
 
 
@@ -316,5 +306,24 @@ export abstract class Stats {
       chan: chan,
       user: user,
     }
+  }
+
+
+  
+  private removeMention(content: string, guild: Guild) {
+    const array = content.split(' ');
+
+    for (let i = 0; i < array.length; i++) {
+      if (this.isMention(array[i])) {
+        if (array[i].endsWith('>')) {
+          if (array[i].startsWith('<@')) {
+            if (array[i].charAt(2) === '!') array[i] = '@' + guild.members.cache.array().find((m) => m.id === array[i].slice(3, -1)).nickname;
+            else array[i] = '@' + guild.members.cache.array().find((m) => m.id === array[i].slice(2, -1)).nickname;
+          }
+        }
+      }
+    }
+
+    return array.join(' ');
   }
 }
