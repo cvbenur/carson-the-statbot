@@ -49,15 +49,15 @@ export abstract class Stats {
       parsed: ':white_check_mark: Messages parsed.',
       computing: ':hourglass_flowing_sand: Computing stats...',
       computed : ':white_check_mark: Stats computed.',
-      resolved: ':white_check_mark: Resolved !',
+      resolved: ':white_check_mark: All done !',
     };
 
     
     const embed = new MessageEmbed()
       .setAuthor(Main.Client.user.username, Main.Client.user.displayAvatarURL())
       .setTitle(`You asked for : \"\`${this.removeMention(message.commandContent, message.guild)}\`\".`)
-      .addField('**Your query :**', answer)
-      .addField('**Results :**', 'Pending...')
+      .addField('Your query :', answer)
+      .addField('Results :', 'Pending...')
       .addField('State :', state.parsing)
       .setFooter(`${message.member.nickname ? message.member.nickname : message.author.username} - ${moment(message.createdAt).format('ddd, MMM Do YYYY - kk:mm:ss')}`, message.author.displayAvatarURL());
 
@@ -97,19 +97,28 @@ export abstract class Stats {
 
     answer = '';
     // Updating answer for phrase count per member
-    if (params.Phrase) {
+    if (params.Phrase && !params.User) {
+
       stats.sortByPhraseCount();
       for (const authorStat of stats.authorStats().filter((author) => author.memberStat.PhraseCount > 0)) {
-        answer += `<@${authorStat.memberId}> said it **\`${authorStat.memberStat.PhraseCount}\`** times (**\`${stats.totalPhraseCountPercentage(authorStat.memberId)}%\`**).\n`;
+        answer += `<@${authorStat.memberId}> : **\`${authorStat.memberStat.PhraseCount}\`** times (**\`${stats.totalPhraseCountPercentage(authorStat.memberId)}%\`**)\n`;
       }
 
-      embed.fields[1].value += answer;
+      embed.addField(`"\`${params.Phrase}\`" hall of fame :`, answer);
+
+
+
+      const tmp = embed.fields[2];
+      embed.fields[2].name = embed.fields[3].name;
+      embed.fields[2].value = embed.fields[3].value;
+      embed.fields[3].name = 'State :';
+      embed.fields[3].value = tmp.value;
     }
 
 
 
     // Updating reply
-    embed.fields[2].value = `${state.parsed}\n${state.computed}\n${state.resolved}`;
+    embed.fields[embed.fields.length - 1].value = `${state.parsed}\n${state.computed}\n${state.resolved}`;
 
 
 
