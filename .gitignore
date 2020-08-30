@@ -1,7 +1,5 @@
-TODO.md
 node_modules
-prefixes.json
-ws-symbols.json
+dist
 .env
 serviceAccount.json
-assets/temp/*
+.vscode
